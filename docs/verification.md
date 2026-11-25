@@ -1,5 +1,7 @@
 # Verification
 
+The full suite requires `rg` and `fd` (`brew install ripgrep fd`). CI installs both before exercising the optional native search tools; workers stay offline during execution.
+
 ## Reproduce
 
 On macOS with Node.js 26:

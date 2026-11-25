@@ -1,5 +1,7 @@
 # Contributing
 
+Install the native search dependencies with `brew install ripgrep fd` before running the complete test suite. CI provisions them explicitly.
+
 Use Node.js 26 on macOS for the complete test suite. Install dependencies with `npm ci --ignore-scripts`; run `npm run check` and `npm test` before opening a pull request.
 
 ## Module boundaries

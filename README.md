@@ -20,6 +20,8 @@ Pi 负责理解需求和解释结果；Greeks、成本与风险约束由程序�
 
 完整功能和测试环境为 **macOS + Node.js 26**。文件、Shell 和原生 CLI 的隔离依赖 macOS `sandbox-exec`；其他平台的隔离后端尚未实现。
 
+启用原生 `grep` / `find` 或运行完整测试前，先安装搜索工具：`brew install ripgrep fd`。隔离进程不能联网下载这些依赖。默认 `read` / `bash` / `edit` / `write` 不需要这两个工具。
+
 ```sh
 git clone https://github.com/Leon1689/pi-trading-agent.git
 cd pi-trading-agent

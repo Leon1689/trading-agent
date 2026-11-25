@@ -18,6 +18,8 @@ The model collects requirements, calls tools, and explains results. Code calcula
 
 The full application is tested on **macOS with Node.js 26**. File, shell, and native-CLI isolation currently require macOS `sandbox-exec`.
 
+For native `grep` / `find` and the full test suite, install the search executables with `brew install ripgrep fd`. Sandboxed tools cannot download dependencies. The default four file/Shell tools do not need these executables.
+
 ```sh
 git clone https://github.com/Leon1689/pi-trading-agent.git
 cd pi-trading-agent

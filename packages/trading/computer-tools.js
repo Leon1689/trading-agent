@@ -58,7 +58,7 @@ export function createComputerTools(policy,{scopes=[],signal:parentSignal,names=
     const writable=['bash','powershell'].includes(tool.name)?policy.shell.write:['write','edit'].includes(tool.name);
     const timeout=Math.min(policy.shell.timeoutMs,typeof args.timeout==='number'&&args.timeout>0?args.timeout*1000:policy.shell.timeoutMs);
     return await new Promise((resolveResult,reject)=>{
-      const child=spawn('/usr/bin/sandbox-exec',['-p',sandboxProfile(policy,writable,temp),realpathSync(process.execPath),worker],{cwd:policy.workspace,env:{PATH:'/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin',HOME:policy.workspace,TMPDIR:temp,LANG:'en_US.UTF-8',OPENSSL_CONF:'/dev/null',PI_CODING_AGENT_DIR:dirname(policy.toolBinDir),PI_OFFLINE:'1'},stdio:['pipe','pipe','pipe'],detached:true});
+      const child=spawn('/usr/bin/sandbox-exec',['-p',sandboxProfile(policy,writable,temp),realpathSync(process.execPath),worker],{cwd:policy.workspace,env:{PATH:'/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin',HOME:policy.workspace,TMPDIR:temp,LANG:'en_US.UTF-8',OPENSSL_CONF:'/dev/null',PI_CODING_AGENT_DIR:dirname(policy.toolBinDir),PI_OFFLINE:'1'},stdio:['pipe','pipe','pipe'],detached:true});
       let bytes=0,output='',error='',failure,closed=false;
       const kill=()=>{try{process.kill(-child.pid,'SIGKILL');}catch{child.kill('SIGKILL');}};
       const abort=()=>{failure=Object.assign(new Error('Computer tool cancelled'),{code:'CANCELLED'});kill();};
