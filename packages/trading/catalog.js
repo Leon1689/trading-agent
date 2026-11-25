@@ -1,3 +1,4 @@
+import { reconciliationCatalog } from './reconciliation-catalog.js';
 import { tradeCatalog } from './trade-catalog.js';
 import { extendedCatalog } from './extended-catalog.js';
 /** Operation metadata drives the browser forms and scoped model tool schemas. */
@@ -79,6 +80,7 @@ export const catalog = [
   op('audit.list', '本地操作审计', 'settings', 'human', 'portfolio'),
   ...extendedCatalog,
   ...tradeCatalog,
+  ...reconciliationCatalog,
 ];
 
 /** Validate wire/model values, including unknown fields, before reaching operation handlers. */

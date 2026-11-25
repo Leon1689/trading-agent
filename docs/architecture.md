@@ -23,6 +23,16 @@ flowchart TD
     Service --> Ledger[Strategy ledger]
     Service --> Research[Research and workspace services]
     Service --> Read[Read-only provider adapters]
+    Service --> Reconcile[Added: saved position and execution reconciliation]
+    Read --> Snapshots[Fixed broker snapshots]
+    Snapshots --> Reconcile
+    Ledger --> Reconcile
+    Reconcile --> DB
+    Scheduler[Modified: independent background scheduling] --> Monitor[Added: opt-in order monitor]
+    Monitor --> Query[Reused: TradeFlow.refresh / gateway GET]
+    Query --> Execution
+    Monitor --> Inbox[Modified: scope-filtered local notifications]
+    Monitor --> DB
     Service --> Intent[Trade intent and immutable preview]
     Intent --> Review[User confirmation card]
     Review --> Execution[IBKR paper execution adapter]
@@ -49,6 +59,8 @@ The model can prepare a trade and read its status. Human-only confirmation endpo
 | `packages/trading/providers.js` | Fixed read-only market and brokerage transports. |
 | `packages/trading/trade-flow.js` | Intent revisions, preview, confirmation capabilities, and order state. |
 | `packages/trading/ibkr-execution.js` | Fixed IBKR paper contract, preview, submission, warning, and query endpoints. |
+| `packages/trading/reconciliation.js` | Fixed snapshot comparison, explicit mappings, execution deduplication, historical reports and human review. |
+| `packages/trading/order-monitor.js` | Per-order opt-in queries, persisted leases, backoff, status notifications and terminal stop. |
 | `packages/trading/storage.js` | Versioned business records and append-only audit events. |
 | `packages/ledger/ledger.js` | Integer-cent strategy ledger and reviewed changes. |
 | `packages/trading/paper.js` | Separate local simulation account and order book. |
@@ -68,3 +80,7 @@ Provider configuration, model credentials, and execution configuration are separ
 The repository includes controlled-response tests. External account access, data subscriptions, model behavior, and broker execution must be validated in the configured environment.
 
 See [technical design](technical-design.md), [native capabilities](runtime-capabilities.md), and [conversational trading](conversational-trading.md).
+
+## 3.4 changes
+
+Added report and watch record types in the existing SQLite store; no ledger schema migration. Modified the scheduler, scope filtering and browser views. Reused the runtime, native tools, ledger, provider transport and human execution gate. Automatic ledger posting and complete historical cash-flow reconciliation remain unimplemented. See [design and interfaces](reconciliation-and-monitoring.md).

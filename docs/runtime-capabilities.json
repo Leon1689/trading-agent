@@ -1,5 +1,5 @@
 {
-  "applicationVersion": "3.3.0",
+  "applicationVersion": "3.4.0",
   "upstreamVersion": "1.6.0",
   "sourceRoot": "node_modules/@earendil-works/pi-coding-agent",
   "settingsKeys": [

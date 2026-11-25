@@ -1,6 +1,6 @@
 /** Pure UI contracts shared by the standalone browser and its tests. */
 export function renderableChildren(...children) { return children.flat(Infinity).filter(child => child !== null && child !== undefined && typeof child !== 'boolean'); }
-export const GROUPS = ['home', 'research', 'options', 'portfolios', 'predict', 'orders', 'alerts', 'files', 'conversations', 'ledger', 'settings'];
+export const GROUPS = ['home', 'research', 'options', 'portfolios', 'predict', 'orders', 'reconciliation', 'alerts', 'files', 'conversations', 'ledger', 'settings'];
 export const PRIVATE_SCOPES = ['trade', 'broker', 'ledger', 'files', 'portfolio', 'localRead', 'localWrite', 'shell', 'resources'];
 export function formValues(schema, fields) {
   const args = {};

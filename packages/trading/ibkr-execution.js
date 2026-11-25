@@ -69,7 +69,7 @@ export class IbkrPaperGateway{
   const qty=rows.length?Number(rows[0].position):0;requireThat(Number.isFinite(qty),'IBKR_POSITION_UNAVAILABLE','持仓数量未知。',409);
   const orders=assertObject(await this.request('GET','/iserver/account/orders',{query:{accountId:f.accountId,force:true},signal}));
   requireThat(orders.snapshot===true&&Array.isArray(orders.orders)&&orders.orders.every(o=>(o.account??o.acct)),'IBKR_POSITION_UNAVAILABLE','当前挂单快照不完整。',409);
-  requireThat(!orders.orders.some(o=>(o.account??o.acct)===f.accountId&&Number(o.conid)===f.conid&&!['Filled','Cancelled','Canceled','Inactive'].includes(o.status)),'POSITION_ORDER_CONFLICT','同合约已有挂单，请先核对，避免重复占用。',409);
+  requireThat(!orders.orders.some(o=>(o.account??o.acct??o.accountId)===f.accountId&&Number(o.conid)===f.conid&&!['Filled','Cancelled','Canceled','Inactive'].includes(o.status)),'POSITION_ORDER_CONFLICT','同合约已有挂单，请先核对，避免重复占用。',409);
   const sign=f.side==='BUY'?1:-1;
   if(f.positionEffect==='CLOSE')requireThat(qty*sign<0&&Math.abs(qty)>=f.quantity,'CLOSE_COVERAGE','券商可见持仓无法覆盖本次平仓数量。',409);
   else requireThat(qty===0||qty*sign>0,'POSITION_EFFECT','已有反向持仓，请明确平仓；不能把净额操作误标为开仓。',409);
@@ -90,10 +90,13 @@ export class IbkrPaperGateway{
   await this.session(f.accountId,signal);
   const x=assertObject(await this.request('GET','/iserver/account/orders',{query:{accountId:f.accountId,force:true},signal}));
   requireThat(Array.isArray(x.orders),'IBKR_SCHEMA','券商订单簿响应无效。',502);
-  const rows=x.orders.filter(o=>(o.account??o.acct)===f.accountId&&(brokerOrderId?String(o.orderId)===String(brokerOrderId):o.order_ref===clientOrderId));
+  const rows=x.orders.filter(o=>(o.account??o.acct??o.accountId)===f.accountId&&(brokerOrderId?String(o.orderId)===String(brokerOrderId):o.order_ref===clientOrderId));
   requireThat(rows.length<=1,'IBKR_RECONCILIATION','发现多个相同订单标识，需人工核对。',409);
   if(!rows.length)return null;const o=rows[0];
   requireThat(Number(o.conid)===f.conid&&o.side===f.side&&Number(o.totalSize)===f.quantity,'IBKR_RECONCILIATION','券商订单与保存需求不匹配。',409);
+  requireThat(/^\d{1,30}$/.test(String(o.orderId))&&typeof o.status==='string'&&o.status.length<=100,'IBKR_SCHEMA','券商订单标识或状态无效。',502);
+  for(const key of ['filledQuantity','remainingQuantity'])if(o[key]!==undefined&&o[key]!==null)requireThat(/^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(String(o[key]))&&Number.isFinite(Number(o[key]))&&Number(o[key])<=f.quantity,'IBKR_RECONCILIATION','券商成交数量超出需求，需人工核对。',409);
+  if(o.status==='Filled')requireThat(Number(o.filledQuantity)===f.quantity&&o.remainingQuantity!==null&&o.remainingQuantity!==undefined&&Number(o.remainingQuantity)===0,'IBKR_RECONCILIATION','Filled回执缺少一致的成交数量。',409);
   return{orderId:String(o.orderId),status:o.status,filledQuantity:o.filledQuantity,remainingQuantity:o.remainingQuantity,avgPrice:o.avgPrice,snapshot:x.snapshot===true,observedAt:new Date(this.now()).toISOString()};
  }
 }

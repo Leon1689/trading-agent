@@ -1,6 +1,6 @@
 # Runtime capabilities
 
-Application 3.3.0 exposes configurable runtime settings and commands; [runtime integration](runtime-integration.md) records the dependency and module boundaries. The Web UI and isolated native CLI have distinct loading and permission boundaries. Machine-readable settings are in [runtime-capabilities.json](runtime-capabilities.json).
+Application 3.4.0 exposes configurable runtime settings and commands; [runtime integration](runtime-integration.md) records the dependency and module boundaries. The Web UI and isolated native CLI have distinct loading and permission boundaries. Machine-readable settings are in [runtime-capabilities.json](runtime-capabilities.json).
 
 ## 逐项能力与差异
 
@@ -87,7 +87,7 @@ Application 3.3.0 exposes configurable runtime settings and commands; [runtime i
 | IPC工具调用 | `{type:"tool",id,name,args}` / `{type:"result",id,result}` | 父进程按真实工具Map执行，4MiB边界/工具预算/安全错误，不能注入actor或直接DB方法 |
 | `pi-network-proxy.js` | `createNativeNetworkProxy([{host,port,address}]) -> {port,url,close}` | HTTP/CONNECT仅授予目标，拒绝其他目标，退出关闭连接 |
 | `computer-tools.js/worker.js` | 官方8工厂、原参数schema，names选择 | 独立文件/Shell范围与进程沙箱；不是自写替代read/bash语义 |
-| 原交易Service/Providers | 101项操作与scope | 研究、计算、账本与独立IBKR模拟确认流程 |
+| 原交易Service/Providers | 107项操作与scope | 研究、计算、账本与独立IBKR模拟确认流程 |
 
 ## 使用入口
 

@@ -32,7 +32,7 @@ export default function trading(pi) {
     service = new TradingService({ path: join(config.dataDir, 'extension.sqlite'), config: { ...config, execution: { mode: 'READ_ONLY' }, pi: { ...config.pi, enabled: false }, scheduler: { ...config.scheduler, enabled: false } } });
   }
   // Without explicit config, the four tools are registered but computer scopes are ungranted; calculations remain usable without database/network initialization.
-  const descriptors = catalog.filter(item => item.model && item.kind !== 'human' && allowedScopes.includes(item.scope) && (service || calculators[item.operation]));
+  const descriptors = catalog.filter(item => item.model && item.kind !== 'human' && (item.requiredScopes??[item.scope]).every(scope=>allowedScopes.includes(scope)) && (service || calculators[item.operation]));
   const names = descriptors.map(item => `trading_${item.operation.replaceAll('.', '_')}`);
   for (const item of descriptors) {
     pi.registerTool({ name: `trading_${item.operation.replaceAll('.', '_')}`, label: item.title, description: item.description, parameters: item.inputSchema, executionMode: 'sequential', execute: async (_id, args, signal) => {

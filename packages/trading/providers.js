@@ -308,7 +308,7 @@ export function createProviders(config = {}, { fetchImpl = fetch, env = process.
     try {
       const response = rows(await get('ibkr', '/iserver/account/trades', {}, {}, signal));
       executions = response.filter(row => (row.account ?? row.accountCode) === id).slice(0, settings.limits.maxItems).map(row => ({
-        executionId: row.execution_id ?? null, instrumentId: row.conid === undefined ? null : String(row.conid), symbol: row.symbol ?? null,
+        accountId: row.account ?? row.accountCode ?? null, orderRef: row.order_ref ?? null, executionId: row.execution_id ?? null, instrumentId: row.conid === undefined ? null : String(row.conid), symbol: row.symbol ?? null,
         side: row.side ?? null, quantity: decimal(row.size), price: decimal(row.price), commission: decimal(row.commission), netAmount: decimal(row.net_amount),
         asOf: instant(row.trade_time_r), currency: row.currency ?? null, raw: scrub(row),
       }));

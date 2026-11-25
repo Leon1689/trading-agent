@@ -27,6 +27,8 @@ The runtime components remain available through the terminal entry. The trading 
 | Market and account data | Extension responsibility | Fixed read-only provider adapters | Added |
 | Order preparation | Application responsibility | Structured intent and IBKR what-if | Added |
 | Broker actions | Application responsibility | Human-confirmed paper-account adapter | Added; external validation required |
+| Account reconciliation | Application responsibility | Saved snapshot comparisons and explicit contract mappings; no automatic ledger posting | Added in 3.4 |
+| Order monitoring | Application responsibility | Per-order GET polling, leases, backoff and scoped notifications | Added in 3.4 |
 | Funded-account trading and commercial services | Outside the runtime scope | No live execution, FX, copy trading, or commercial account integration | Not implemented |
 
 The Web UI does not reproduce every native terminal interaction. Native extensions run through the isolated CLI, and their remote services require configuration. Retaining a native command is distinct from testing every provider, device, or remote integration.

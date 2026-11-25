@@ -1,6 +1,6 @@
 # Conversational trading and IBKR paper execution
 
-Application 3.3.0. The paper adapter supports structured trade preparation and human-confirmed actions. Model and Gateway connections require local configuration. Protocol tests use controlled responses rather than live brokerage access.
+Application 3.4.0. The paper adapter supports structured trade preparation and human-confirmed actions. Model and Gateway connections require local configuration. Protocol tests use controlled responses rather than live brokerage access.
 
 ## 使用流程与职责
 
@@ -89,7 +89,7 @@ ACKNOWLEDGED内部用`receipt.status/filledQuantity/remainingQuantity/avgPrice`�
 | trade.confirm | 仅人工界面/API | id/revision/confirmationToken | 消费令牌并发送绑定动作 |
 | trade.discard | 仅人工 | id/revision | 放弃未提交草稿 |
 
-业务目录从91项增至101项，其中57项可按scope暴露给模型、44项仅人工。原生工具另计。Web `POST /api/operations`仍在HttpOnly认证和来源校验下绑定human；模型工具由Service绑定model，不能在JSON参数中提升身份。接口`trade.review/confirm/discard`不注册到Pi模型工具集，原生CLI经IPC同样没有这些工具。
+业务目录从91项增至107项，其中60项可按scope暴露给模型、47项仅人工。原生工具另计。Web `POST /api/operations`仍在HttpOnly认证和来源校验下绑定human；模型工具由Service绑定model，不能在JSON参数中提升身份。接口`trade.review/confirm/discard`不注册到Pi模型工具集，原生CLI经IPC同样没有这些工具。
 
 查询配置`providers.ibkr`与执行配置`execution.ibkr`相互独立。执行仅允许本机固定Gateway、DU白名单、`environment=PAPER`，且预览/提交均核查券商`isPaper=true`和selectedAccount。原生扩展出站网络拒绝两份配置的券商地址，Shell仍无网络，不继承应用凭据。
 
@@ -123,3 +123,7 @@ ACKNOWLEDGED内部用`receipt.status/filledQuantity/remainingQuantity/avgPrice`�
 - [Web API trading examples](https://www.interactivebrokers.com/campus/ibkr-api-page/web-api-staging/)：订单标识和状态查询字段。
 
 以上链接是接口依据；本应用的输入校验与状态机以源码和本页契约为准。
+
+## 3.4 后续状态与对账
+
+交易卡可逐笔启停后台只读查询；浏览器在可见且未核对订单时自动刷新。`trade.watch` 为人工操作，`trade.monitorStatus` 为 trade 范围查询。未变化回执不再递增需求版本；实际变化使旧确认失效。新增报告流程不会修改原账本或自动提供 Wheel 已核对证据。见 [对账与订单跟踪](reconciliation-and-monitoring.md)。

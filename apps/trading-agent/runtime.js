@@ -9,7 +9,7 @@ import { computerPolicy } from '../../packages/trading/computer-tools.js';
 import { fileURLToPath } from 'node:url';
 import { TradingError } from '../../packages/trading/errors.js';
 
-export const FRAMEWORK = Object.freeze({ framework: 'pi-coding-agent', version: '1.6.0', applicationVersion: '3.3.0', standalone: true, sessionFormat: 'PI_JSONL_TREE', harnessRequired: false });
+export const FRAMEWORK = Object.freeze({ framework: 'pi-coding-agent', version: '1.6.0', applicationVersion: '3.4.0', standalone: true, sessionFormat: 'PI_JSONL_TREE', harnessRequired: false });
 export function loadApplicationConfig(home, overrides = {}) {
   let input = {};
   const path = join(home, 'config.json');

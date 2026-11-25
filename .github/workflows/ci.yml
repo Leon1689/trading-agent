@@ -26,3 +26,4 @@ jobs:
       - run: node scripts/check-publication.mjs
       - run: npm test
       - run: node examples/option-pricing.mjs
+      - run: node examples/reconciliation.mjs

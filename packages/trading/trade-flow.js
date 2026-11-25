@@ -1,3 +1,4 @@
+import {receiptFingerprint,terminalReceipt} from './order-monitor.js';
 /** Persistent conversation -> intent -> immutable preview -> human authorization -> broker receipt. */
 import {randomUUID,randomBytes,createHash} from 'node:crypto';
 import {requireThat} from './errors.js';
@@ -8,7 +9,7 @@ const hash=x=>createHash('sha256').update(typeof x==='string'?x:JSON.stringify(x
 const missingNames={accountId:'模拟账户',symbol:'标的代码',assetClass:'股票或期权',side:'买入或卖出',positionEffect:'开仓或平仓',quantity:'数量',type:'订单类型',limitPrice:'限价',currency:'币种',timeInForce:'有效期',session:'交易时段',conid:'IBKR唯一合约',expiration:'到期日',right:'Call或Put',strike:'行权价',multiplier:'合约乘数'};
 const required=['accountId','symbol','assetClass','side','positionEffect','quantity','type','limitPrice','currency','timeInForce','session','conid'];
 const mutable=['NEEDS_INPUT','READY','PREVIEWED'];
-const publicRow=row=>{const{approval,...safe}=row;return{...safe,requiresHumanConfirmation:true,mode:'IBKR_PAPER',synthetic:false,executionResultIsFill:row.receipt?.status==='Filled'};};
+const publicRow=row=>{const{approval,...safe}=row;return{...safe,requiresHumanConfirmation:true,mode:'IBKR_PAPER',synthetic:false,executionResultIsFill:row.receipt?.status==='Filled'&&terminalReceipt(row.receipt,row.fields.quantity)};};
 export class TradeFlow{
  constructor(store,config,{gateway,now=()=>Date.now()}={}){this.store=store;this.config=config;this.now=now;this.gateway=gateway??new IbkrPaperGateway(config.execution.ibkr);}
  enabled(){requireThat(this.config.execution.mode==='IBKR_PAPER'&&this.config.execution.ibkr,'EXECUTION_DISABLED','IBKR模拟执行尚未配置启用；需求可先保存，尚未下单。',403);}
@@ -104,13 +105,15 @@ export class TradeFlow{
   requireThat(/^\d{1,30}$/.test(String(x.order_id))&&typeof x.order_status==='string','IBKR_SCHEMA','券商未返回可核对的订单编号。');
   return{status:'ACKNOWLEDGED',brokerOrderId:String(x.order_id),replyId:null,warnings:[],receipt:{orderId:String(x.order_id),status:x.order_status}};
  }
- async refresh({id},signal){
+ async refresh({id},signal,guard){
   this.enabled();const row=this.store.require('tradeIntent',id);
   requireThat(row.status!=='SUBMITTING'||this.now()-Date.parse(row.submissionStartedAt)>30000,'BROKER_BUSY','提交仍在进行，请稍后查单。',409);
   requireThat(['SUBMITTING','UNKNOWN','ACKNOWLEDGED','CANCEL_PENDING'].includes(row.status),'INTENT_STATE','该状态尚无可查的已提交订单。',409);
-  const receipt=await this.gateway.find(row.fields,row.clientOrderId,row.brokerOrderId,signal);signal?.throwIfAborted();
+  const receipt=await this.gateway.find(row.fields,row.clientOrderId,row.brokerOrderId,signal);signal?.throwIfAborted();guard?.();
   if(!receipt)return{...publicRow(row),reconciliation:'NOT_FOUND_NOT_PROOF_OF_FAILURE',message:'当前券商会话未找到。不能据此断言下单失败或重新提交；请在IBKR核对。'};
-  return publicRow(this.store.put('tradeIntent',id,{...row,status:'ACKNOWLEDGED',brokerOrderId:receipt.orderId,receipt,approval:null,pendingAction:null,lastError:null},row.revision));
+  const status=row.status==='CANCEL_PENDING'&&!terminalReceipt(receipt,row.fields.quantity)?'CANCEL_PENDING':'ACKNOWLEDGED';
+  if(row.status===status&&row.brokerOrderId===receipt.orderId&&receiptFingerprint(row.receipt)===receiptFingerprint(receipt))return publicRow(row);
+  return publicRow(this.store.put('tradeIntent',id,{...row,status,brokerOrderId:receipt.orderId,receipt,approval:null,pendingAction:null,lastError:null},row.revision));
  }
  discard({id,revision}){const row=this.store.require('tradeIntent',id);requireThat(row.revision===revision&&mutable.includes(row.status),'INTENT_STATE','仅可放弃未提交需求。',409);return publicRow(this.store.put('tradeIntent',id,{...row,status:'DISCARDED',approval:null},revision));}
 }

@@ -46,8 +46,8 @@ async function mount(t,{model=false,images=false,config:overrides={},gateway}={}
 }
 
 test('standalone navigation, quant calculation and readonly preview operate against the actual service',async t=>{
- const ui=await mount(t);assert.match(ui.app.textContent,/trading agent/);assert.match(ui.app.textContent,/101/);assert.equal(ui.requests.length,0);
- for(const name of ['◉市场研究','Δ期权与规则','◫组合与回测','◇预测市场','⇄模拟订单','◷提醒与简报','▤资料与报告','◌交易对话','▦期权账本','⚙能力与设置'])await ui.click('button',name);
+ const ui=await mount(t);assert.match(ui.app.textContent,/trading agent/);assert.match(ui.app.textContent,/107/);assert.equal(ui.requests.length,0);
+ for(const name of ['◉市场研究','Δ期权与规则','◫组合与回测','◇预测市场','⇄模拟订单','≋成交与持仓对账','◷提醒与简报','▤资料与报告','◌交易对话','▦期权账本','⚙能力与设置'])await ui.click('button',name);
  assert.equal(ui.errors.length,0);assert.equal(ui.requests.some(c=>c.operation?.startsWith('broker.')),false);
  await ui.click('button','Δ期权与规则');const operation=ui.input('选择操作');operation.value='quant.price';await operation.event('change');const controlText=ui.app.querySelector('.workspace-grid').children[0].textContent;assert.doesNotMatch(controlText,/false|null|undefined/);await ui.click('button','运行');assert.match(ui.app.textContent,/2\.49337682/);
  await ui.click('button','⇄模拟订单');await ui.click('button','预览');assert.match(ui.app.textContent,/当前只读，不能确认订单/);assert.equal(ui.requests.some(c=>c.operation==='order.confirm'),false);
@@ -56,6 +56,29 @@ test('standalone navigation, quant calculation and readonly preview operate agai
 
 test('standalone ledger persists original cents and refreshes revision after explicit edits',async t=>{
  const ui=await mount(t);await ui.click('button','▦期权账本');await ui.click('button','录入 / 调整持仓');await ui.setField('symbol','AAPL');await ui.setField('shares','100');await ui.setField('nominalCost','10000.01');await ui.click('button','保存');assert.equal(ui.ledger.read().positions.AAPL.nominalCostCents,1000001);assert.equal(ui.ledger.read().revision,1);assert.match(ui.app.textContent,/AAPL/);assert.equal(ui.errors.length,0);
+});
+
+test('reconciliation page requires explicit mapping and records a human review without ledger changes',async t=>{
+ const ui=await mount(t);
+ ui.ledger.change({action:'savePosition',revision:0,data:{symbol:'AAPL',shares:100,nominalCost:10000,openingNetPremium:0,asOf:'2026-11-25'},requestId:'ui-fixture-position'});
+ ui.service.store.put('snapshot','synthetic-snapshot',{immutable:true,accountId:'DU1',inputAuthority:'SYNTHETIC_FIXTURE',mode:'synthetic',source:'browser-dom-test',receivedAt:new Date().toISOString(),data:{accountId:'DU1',positions:[{instrumentId:'265598',symbol:'AAPL',assetClass:'STK',quantity:'101',currency:'USD'}],executions:[],coverage:{positionsComplete:true}}},0);
+ await ui.click('button','≋成交与持仓对账');await ui.click('button','读取快照与账本');
+ await ui.click('button','生成对账报告');assert.equal(ui.service.store.list('reconciliation').length,0);
+ ui.input('AAPL conid').value='265598';ui.input('已核对账户与合约映射').checked=true;
+ await ui.click('button','生成对账报告');assert.match(ui.app.textContent,/DIFFERENCE/);assert.match(ui.app.textContent,/SYNTHETIC_INPUT_NOT_ACCOUNT_EVIDENCE/);
+ ui.input('对账复核意见').value='合成测试差异；未修改账本。';await ui.click('button','记录人工复核');
+ assert.equal(ui.service.store.list('reconciliation')[0].status,'REVIEWED');assert.equal(ui.ledger.read().revision,1);assert.equal(ui.errors.length,0);
+});
+
+test('order cards enable and pause only read-only monitoring',async t=>{
+ const config={execution:{mode:'IBKR_PAPER',ibkr:{baseUrl:'http://127.0.0.1:59999/v1/api',allowInsecureLocal:true,environment:'PAPER',accountIds:['DU1']}}};
+ const receipt={orderId:'101',status:'Submitted',filledQuantity:0,remainingQuantity:2,snapshot:true};
+ const ui=await mount(t,{config,gateway:{find:async()=>receipt,submit:()=>assert.fail('No submission from watch')}});
+ ui.service.store.put('tradeIntent','ui-order',{status:'ACKNOWLEDGED',fields:{accountId:'DU1',symbol:'AAPL',conid:265598,assetClass:'STOCK',currency:'USD',side:'BUY',quantity:2},brokerOrderId:'101',clientOrderId:'ui-fixture',receipt},0);
+ await ui.click('button','⇄模拟订单');await ui.click('button','启用自动查单');assert.equal(ui.service.orderMonitor.status({id:'ui-order'}).enabled,true);
+ await ui.service.backgroundTick();await ui.click('button','刷新交易卡');assert.match(ui.app.textContent,/上次查询 20/);
+ await ui.click('button','暂停自动查单');assert.equal(ui.service.orderMonitor.status({id:'ui-order'}).enabled,false);
+ assert.equal(ui.requests.some(row=>row.operation==='trade.confirm'),false);assert.equal(ui.errors.length,0);
 });
 
 test('standalone trading chat never auto-enables private history and sends only selected scopes',async t=>{

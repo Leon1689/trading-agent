@@ -43,3 +43,7 @@ Add localRead/localWrite/shell only when needed. Native file paths and network d
 ## Data and compatibility
 
 Keep runtime data outside the source checkout and back it up before migration. The default standalone application does not use Harness. The legacy packages remain available for existing installations; see [migration](upgrade-3.0.md).
+
+## 成交与持仓对账、自动查单（3.4）
+
+在“市场研究”保存券商只读快照，然后进入“成交与持仓对账”，读取快照/账本、填写人工核对的股票 conid、确认账户归属并生成报告。报告可下载、复核，不自动入账。订单卡的“启用自动查单”仅适用于已提交的 IBKR 模拟订单；每笔独立启停。程序关闭时停止查询。完整步骤、缺失覆盖和错误恢复见 [对账与订单跟踪](reconciliation-and-monitoring.md)。

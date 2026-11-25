@@ -12,9 +12,10 @@ npm run check
 node scripts/check-publication.mjs
 npm test
 node examples/option-pricing.mjs
+node examples/reconciliation.mjs
 ```
 
-The suite contains 236 tests. The public repository's CI runs the same commands on a clean macOS runner without model or brokerage secrets.
+The suite contains 258 tests. The public repository's CI runs the same commands on a clean macOS runner without model or brokerage secrets.
 
 ## Coverage
 
@@ -24,6 +25,7 @@ The suite contains 236 tests. The public repository's CI runs the same commands 
 - File/Shell isolation, separate scopes, resource-history grants, network allowlists, cancellation, and budgets.
 - Provider schemas, fixed endpoints, credential redaction, pagination, stale data, and response limits.
 - Intent completion, revisions, immutable previews, human confirmation, paper-account checks, warning loops, ambiguous writes, reconciliation, and order-state distinctions.
+- Snapshot/ledger mappings, execution deduplication, partial coverage, stale reviews, multi-scope report reads, monitor leases, backoff, pause races and scoped notifications.
 - Browser component behavior through an isolated DOM harness.
 
 ## Evidence limits
@@ -33,3 +35,5 @@ Model responses and brokerage transports are controlled test fixtures. Executing
 Real account access, market-data entitlements, Gateway authentication, contract handling, and paper execution need environment-specific acceptance checks. The test suite must never use funded accounts or submit external orders. Local paper fills are not evidence of broker execution.
 
 The macOS isolation backend is required for the complete suite. Other operating systems do not silently fall back to unrestricted file or Shell access.
+
+Version 3.4 browser acceptance uses a separate temporary data directory and an injected synthetic gateway. Report generation/review/export and background terminal status updates are checked without connecting to IBKR.

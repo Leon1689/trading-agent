@@ -80,6 +80,15 @@ test('accepted is distinct from rejected, cancellation pending and cancellation 
  f.state.next=[{order_id:'101',order_status:'Submitted'}];x=await f.confirm(await f.review(await f.ready()));x=await f.confirm(await f.review(x,'CANCEL'));assert.equal(x.status,'CANCEL_PENDING');assert.equal(x.receipt.status,'Submitted');
  f.state.orders=[{account:'DU1',conid:stock.conid,orderId:101,status:'Cancelled',side:'BUY',totalSize:2,filledQuantity:0,remainingQuantity:2}];x=await f.run('trade.refresh',{id:x.id});assert.equal(x.receipt.status,'Cancelled');await assert.rejects(f.review(x,'CANCEL'));
 });
+
+test('a Filled status without consistent quantities is rejected rather than recorded as a fill',async t=>{
+ const f=fixture(t),x=await f.confirm(await f.review(await f.ready()));
+ f.state.orders=[{account:'DU1',conid:stock.conid,orderId:101,status:'Filled',side:'BUY',totalSize:2}];
+ await assert.rejects(f.run('trade.refresh',{id:x.id}),{code:'IBKR_RECONCILIATION'});
+ assert.equal(f.service.trades.get(x.id).executionResultIsFill,false);
+ f.state.orders[0]={...f.state.orders[0],filledQuantity:3,remainingQuantity:0};
+ await assert.rejects(f.run('trade.refresh',{id:x.id}),{code:'IBKR_RECONCILIATION'});
+});
 test('short option opening requires human Wheel evidence matching this exact order and strict C rule',async t=>{
  const f=fixture(t);const option={...stock,assetClass:'OPTION',side:'SELL',quantity:1,conid:123,expiration:'2026-12-18',right:'CALL',strike:'110',multiplier:100,limitPrice:'1.00'};
  f.state.contract={con_id:123,symbol:'AAPL',currency:'USD',instrument_type:'OPT',local_symbol:'AAPL  261218C00110000',multiplier:'100'};

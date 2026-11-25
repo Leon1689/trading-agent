@@ -3893,5 +3893,221 @@
       "additionalProperties": false
     },
     "example": {}
+  },
+  {
+    "operation": "reconcile.create",
+    "title": "生成持仓与成交对账报告（不修改账本）",
+    "description": "生成持仓与成交对账报告（不修改账本）",
+    "group": "reconciliation",
+    "kind": "human",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "ledger",
+      "trade"
+    ],
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "type": "string",
+          "description": "固定券商快照ID"
+        },
+        "ledgerRevision": {
+          "type": "number",
+          "description": "当前记录版本；首次开启跟踪填0"
+        },
+        "accountScopeConfirmed": {
+          "type": "boolean",
+          "description": "已人工确认所选账本持仓属于快照账户"
+        },
+        "bindings": {
+          "type": "array",
+          "description": "人工核对的股票映射；不按代码自动匹配",
+          "items": {
+            "type": "object",
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "description": "账本股票代码"
+              },
+              "instrumentId": {
+                "type": "string",
+                "description": "券商conid"
+              },
+              "currency": {
+                "type": "string",
+                "description": "已核对币种"
+              }
+            },
+            "required": [
+              "symbol",
+              "instrumentId",
+              "currency"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "snapshotId",
+        "ledgerRevision",
+        "accountScopeConfirmed",
+        "bindings"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "reconcile.list",
+    "title": "已保存的对账报告",
+    "description": "已保存的对账报告",
+    "group": "reconciliation",
+    "kind": "read",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "ledger",
+      "trade"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "reconcile.get",
+    "title": "读取对账报告及过期状态",
+    "description": "读取对账报告及过期状态",
+    "group": "reconciliation",
+    "kind": "read",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "ledger",
+      "trade"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "reconcile.review",
+    "title": "人工记录对账复核意见（不入账）",
+    "description": "人工记录对账复核意见（不入账）",
+    "group": "reconciliation",
+    "kind": "human",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "ledger",
+      "trade"
+    ],
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本；首次开启跟踪填0"
+        },
+        "note": {
+          "type": "string",
+          "description": "复核记录；差异仍需单独处理"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.watch",
+    "title": "启停此订单的后台只读跟踪",
+    "description": "启停此订单的后台只读跟踪",
+    "group": "orders",
+    "kind": "human",
+    "scope": "trade",
+    "requiredScopes": [
+      "trade"
+    ],
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本；首次开启跟踪填0"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "intervalMs": {
+          "type": "number",
+          "description": "查询间隔毫秒；至少15000"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.monitorStatus",
+    "title": "读取订单跟踪状态",
+    "description": "读取订单跟踪状态",
+    "group": "orders",
+    "kind": "read",
+    "scope": "trade",
+    "requiredScopes": [
+      "trade"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
   }
 ]

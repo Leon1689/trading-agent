@@ -1,6 +1,6 @@
-# 操作接口目录（3.3.0）
+# 操作接口目录（3.4.0）
 
-模型工具按scope选择；human接口不暴露给Pi。原生工具另计。
+模型工具按 scope 选择；列出多个范围时需要全部授予。human 接口不暴露给模型。原生工具另计。
 
 | 操作 | 名称 | 类型 | 范围 | 模型可见 |
 |---|---|---|---|---|
@@ -105,3 +105,9 @@
 | trade.review | 人工核对订单或券商警告，签发短期确认凭证 | human | trade | 否 |
 | trade.confirm | 人工提交已核对的IBKR模拟订单动作 | human | trade | 否 |
 | trade.discard | 放弃未提交的交易需求 | human | trade | 否 |
+| reconcile.create | 生成持仓与成交对账报告（不修改账本） | human | broker + ledger + trade | 否 |
+| reconcile.list | 已保存的对账报告 | read | broker + ledger + trade | 是 |
+| reconcile.get | 读取对账报告及过期状态 | read | broker + ledger + trade | 是 |
+| reconcile.review | 人工记录对账复核意见（不入账） | human | broker + ledger + trade | 否 |
+| trade.watch | 启停此订单的后台只读跟踪 | human | trade | 否 |
+| trade.monitorStatus | 读取订单跟踪状态 | read | trade | 是 |

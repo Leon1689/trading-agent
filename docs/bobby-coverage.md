@@ -52,3 +52,7 @@ The matrix tracks research and trading workflows, including features compared wi
 | F46 | 语音/移动端 | 部分适配 | 响应式独立Web、PWA manifest与仅静态资源缓存、用户启动浏览器语音输入/朗读（可能在线）；无原生App、离线ASR或私有数据离线缓存。 |
 
 Order execution is limited to the human-confirmed IBKR paper workflow described in [conversational trading](conversational-trading.md). Funded-account execution and commercial services remain outside the current implementation.
+
+## 3.4 实现增量
+
+新增持仓/成交对账报告与逐笔后台订单跟踪。只读快照按人工账户映射和精确合约比较；订单跟踪调用查询接口，不能代替提交确认。原生运行时和期权能力继续复用。全历史现金流自动入账、税务成本、外部推送和真实账户验收仍未完成；不将本次增量表述为完整复制商业产品。详见 [对账与跟踪](reconciliation-and-monitoring.md)。

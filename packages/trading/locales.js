@@ -904,6 +904,12 @@ export const locales = {
 
 // Conversational broker controls are separate from the legacy local-paper tools.
 const tradeTitles={
+ 'reconcile.create':['生成持仓与成交对账报告','Create position and execution reconciliation'],
+ 'reconcile.list':['已保存对账报告','Saved reconciliation reports'],
+ 'reconcile.get':['读取对账报告','Read reconciliation report'],
+ 'reconcile.review':['人工记录对账复核','Record human reconciliation review'],
+ 'trade.watch':['启停后台只读查单','Enable or pause read-only order monitoring'],
+ 'trade.monitorStatus':['订单跟踪状态','Order monitoring status'],
  'trade.intent':['提取或补充交易需求','Collect or amend trade intent'],
  'trade.list':['交易需求与券商订单','Trade intents and broker orders'],
  'trade.get':['读取交易需求','Read trade intent'],
@@ -915,6 +921,6 @@ const tradeTitles={
  'trade.confirm':['人工确认券商动作','Human confirmation of broker action'],
  'trade.discard':['放弃未提交需求','Discard unsubmitted intent'],
 };
-const tradeLabels={fields:['提取的需求字段','Extracted intent fields'],clear:['需清空的字段','Fields to clear'],chatId:['会话编号','Conversation ID'],conid:['IBKR合约编号','IBKR contract ID'],underlyingConid:['标的合约编号','Underlying contract ID'],month:['合约月份','Contract month'],wheelEvidence:['人工核对的Wheel证据','Human-reconciled Wheel evidence']};
+const tradeLabels={snapshotId:['固定快照ID','Fixed snapshot ID'],ledgerRevision:['账本版本','Ledger revision'],accountScopeConfirmed:['已核对账户归属','Account ownership verified'],bindings:['股票合约映射','Stock contract bindings'],fields:['提取的需求字段','Extracted intent fields'],clear:['需清空的字段','Fields to clear'],chatId:['会话编号','Conversation ID'],conid:['IBKR合约编号','IBKR contract ID'],underlyingConid:['标的合约编号','Underlying contract ID'],month:['合约月份','Contract month'],wheelEvidence:['人工核对的Wheel证据','Human-reconciled Wheel evidence']};
 for(const[key,values]of Object.entries(tradeTitles)){locales.zh.operationTitles[key]=values[0];locales.en.operationTitles[key]=values[1];}
 for(const[key,values]of Object.entries(tradeLabels)){locales.zh.fieldLabels[key]=values[0];locales.en.fieldLabels[key]=values[1];}

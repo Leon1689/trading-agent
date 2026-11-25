@@ -8,14 +8,16 @@ export function resolveConfig(input = {}) {
     computer: { workspace: null, files: {read:true,write:true}, shell: {enabled:true,write:true,timeoutMs:30000}, ...(input.computer??{}) },
     providers: { mode: 'live', predict: { enabled: false }, ...(input.providers ?? {}) },
     pi: { enabled: false, provider: '', model: '', apiKeyEnv: '', timeoutMs: 120000, maxToolCalls: 12, maxModelCalls: 8, maxTokens: 4096, maxMessages: 300, ...(input.pi ?? {}) },
+    orderMonitoring: { enabled: true, pollMs: 10000, intervalMs: 30000, maxFailures: 5, ...(input.orderMonitoring ?? {}) },
     scheduler: { enabled: false, pollMs: 30000, minIntervalMs: 60000, ...(input.scheduler ?? {}) },
     limits: { requestBytes: 4 * 1024 * 1024, textFileBytes: 1024 * 1024, imageBytes: 2 * 1024 * 1024, listLimit: 200, orderPreviewTtlMs: 300000, ...(input.limits ?? {}) },
     execution: { mode: 'READ_ONLY', ...(input.execution ?? {}) },
   };
   requireThat(['READ_ONLY', 'LOCAL_PAPER', 'IBKR_PAPER'].includes(config.execution.mode), 'INVALID_CONFIG', '执行模式支持READ_ONLY、LOCAL_PAPER或IBKR_PAPER；实盘未启用。');
-  for (const [section, fields] of Object.entries({ limits: Object.keys(config.limits), scheduler: ['pollMs', 'minIntervalMs'], pi: ['timeoutMs', 'maxToolCalls', 'maxModelCalls', 'maxTokens', 'maxMessages'] })) {
+  for (const [section, fields] of Object.entries({ limits: Object.keys(config.limits), orderMonitoring: ['pollMs','intervalMs','maxFailures'], scheduler: ['pollMs', 'minIntervalMs'], pi: ['timeoutMs', 'maxToolCalls', 'maxModelCalls', 'maxTokens', 'maxMessages'] })) {
     for (const field of fields) requireThat(Number.isSafeInteger(config[section][field]) && config[section][field] > 0, 'INVALID_CONFIG', `${section}.${field}必须为正整数。`);
   }
+  requireThat(typeof config.orderMonitoring.enabled==='boolean' && config.orderMonitoring.pollMs>=5000 && config.orderMonitoring.intervalMs>=15000 && config.orderMonitoring.intervalMs<=3600000 && config.orderMonitoring.maxFailures<=10, 'INVALID_CONFIG', '订单跟踪需要布尔开关、至少5秒调度、15秒至1小时查询间隔和最多10次失败。');
   if (config.pi.enabled) {
     requireThat(typeof config.pi.provider === 'string' && config.pi.provider && typeof config.pi.model === 'string' && config.pi.model && /^[A-Z][A-Z0-9_]*$/.test(config.pi.apiKeyEnv), 'INVALID_CONFIG', 'Pi需要显式provider、model和密钥环境变量名称。');
   }

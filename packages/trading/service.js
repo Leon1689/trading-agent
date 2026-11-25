@@ -1,3 +1,5 @@
+import { OrderMonitor } from './order-monitor.js';
+import { Reconciliation } from './reconciliation.js';
 /** Application operations shared by the authenticated Host, Pi tools and Harness tools. */
 import { randomUUID, createHash } from 'node:crypto';
 import { TradingStore } from './storage.js';
@@ -31,10 +33,11 @@ export class TradingService {
     this.providers = providers ?? createProviders(this.config.providers);
     this.store = store ?? new TradingStore(path); this.runner = runner; this.now = now;
     this.trades=new TradeFlow(this.store,this.config,{gateway,now});
+    this.orderMonitor=new OrderMonitor(this);this.reconciliation=new Reconciliation(this);
     this.paper = new PaperExecution(this.store, this.config, now); this.activeChats = new Set(); this.activeAlerts = new Set(); this.closing = false; this.conditions = new ConditionalPaper(this.store, this.paper, now); this.workspace = new WorkspaceFeatures(this);
   }
   capabilities() {
-    return { native: this.runner?.native??null, computer: this.runner?.computer??null, providers: this.providers.capabilities(), brokerAccess: this.config.execution.mode==='IBKR_PAPER'?'PAPER_HUMAN_CONFIRM':'READ_ONLY', conversationalTrading:{intent:true,humanConfirmation:true,brokerPaper:this.config.execution.mode==='IBKR_PAPER',connectionValidated:false,live:false}, execution: this.config.execution.mode, chat: { enabled: this.config.pi.enabled && !!this.runner, images: this.config.pi.enabled && this.runner?.supportsImages === true }, notifications: { local: true, background: this.config.scheduler.enabled, externalDelivery: false }, files: ['text/csv', 'application/json', 'application/x-ndjson', 'text/plain', 'text/markdown', 'image/png', 'image/jpeg', 'image/webp'], liveTrading: false, publicSharing: false, nativeMobileApp: false, installableWebApp: true, localSharing: true, conditionalPreviews: true };
+    return { native: this.runner?.native??null, computer: this.runner?.computer??null, providers: this.providers.capabilities(), brokerAccess: this.config.execution.mode==='IBKR_PAPER'?'PAPER_HUMAN_CONFIRM':'READ_ONLY', reconciliation:{savedReports:true,automaticLedgerPosting:false},orderMonitoring:{enabled:this.config.orderMonitoring.enabled,perOrderOptIn:true,intervalMs:this.config.orderMonitoring.intervalMs},conversationalTrading:{intent:true,humanConfirmation:true,brokerPaper:this.config.execution.mode==='IBKR_PAPER',connectionValidated:false,live:false}, execution: this.config.execution.mode, chat: { enabled: this.config.pi.enabled && !!this.runner, images: this.config.pi.enabled && this.runner?.supportsImages === true }, notifications: { local: true, background: this.config.scheduler.enabled, externalDelivery: false }, files: ['text/csv', 'application/json', 'application/x-ndjson', 'text/plain', 'text/markdown', 'image/png', 'image/jpeg', 'image/webp'], liveTrading: false, publicSharing: false, nativeMobileApp: false, installableWebApp: true, localSharing: true, conditionalPreviews: true };
   }
   bootstrap() { return { catalog, capabilities: this.capabilities(), settings: this.settings(), limits: { textFileBytes: this.config.limits.textFileBytes, imageBytes: this.config.limits.imageBytes, requestBytes: this.config.limits.requestBytes, requestTimeoutMs: this.config.pi.timeoutMs + 10000 } }; }
   settings() { return this.store.get('settings', 'display') ?? { id: 'display', revision: 0, language: 'zh', timezone: 'Asia/Shanghai' }; }
@@ -46,7 +49,7 @@ export class TradingService {
     requireThat(descriptor, 'UNKNOWN_OPERATION', '操作不存在。', 404);
     if (actor === 'model') {
       requireThat(descriptor.model && descriptor.kind !== 'human', 'HUMAN_REQUIRED', '该操作只能由用户在界面执行。', 403);
-      requireThat(allowedScopes.includes(descriptor.scope), 'SCOPE_DENIED', '本轮未允许访问该数据范围。', 403, { scope: descriptor.scope });
+      requireThat((descriptor.requiredScopes??[descriptor.scope]).every(scope=>allowedScopes.includes(scope)), 'SCOPE_DENIED', '本轮未允许访问该数据范围。', 403, { scope: descriptor.scope });
     }
     try { validateInput(args, descriptor.inputSchema); } catch (error) { throw new TradingError('INVALID_INPUT', error.message); }
     signal?.throwIfAborted();
@@ -63,6 +66,14 @@ export class TradingService {
   }
   async dispatch(operation, args, context) {
     const { actor, signal } = context;
+    if(operation.startsWith('reconcile.')) {
+      switch(operation) {
+        case 'reconcile.create': return this.reconciliation.create(args);
+        case 'reconcile.get': return this.reconciliation.get(args.id);
+        case 'reconcile.list': return this.reconciliation.list();
+        case 'reconcile.review': return this.reconciliation.review(args);
+      }
+    }
     if(operation.startsWith('trade.')){
       switch(operation){
         case 'trade.intent': return this.trades.upsert(args,context);
@@ -73,6 +84,8 @@ export class TradingService {
         case 'trade.prepare': return this.trades.prepare(args,signal);
         case 'trade.review': return this.trades.review(args);
         case 'trade.confirm': return this.trades.confirm(args,signal);
+        case 'trade.watch': return this.orderMonitor.watch(args);
+        case 'trade.monitorStatus': return this.orderMonitor.status(args);
         case 'trade.refresh': return this.trades.refresh(args,signal);
         case 'trade.discard': return this.trades.discard(args);
       }
@@ -173,7 +186,7 @@ export class TradingService {
       case 'alerts.list': return this.store.list('alert', { limit: this.config.limits.listLimit });
       case 'alerts.evaluate': return this.evaluateAlert(args.id, signal);
       case 'alerts.update': { const row = this.store.require('alert', args.id); return this.store.put('alert', args.id, { ...row, enabled: args.enabled, nextRunAt: this.now() }, args.revision); }
-      case 'notifications.list': return this.store.list('notification', { limit: this.config.limits.listLimit });
+      case 'notifications.list': return this.store.list('notification', { limit: this.config.limits.listLimit }).filter(row=>actor!=='model'||(row.requiredScopes??[]).every(scope=>context.allowedScopes.includes(scope)));
       case 'notifications.read': { const row = this.store.require('notification', args.id); return this.store.put('notification', args.id, { ...row, read: true }, args.revision); }
       case 'file.import': return importFile(this.store, args, this.config.limits);
       case 'file.list': return this.store.list('file', { limit: this.config.limits.listLimit }).map(fileSummary);
@@ -232,6 +245,10 @@ export class TradingService {
       }
     } finally { this.activeAlerts.delete(id); }
   }
+  async backgroundTick(signal) {
+    const results=this.config.scheduler.enabled?await this.tick(signal):[];
+    return [...results,...await this.orderMonitor.tick(signal)];
+  }
   async tick(signal) {
     this.paper.expireDayOrders();
     const results = [];
@@ -245,7 +262,7 @@ export class TradingService {
   readShare(token) { return this.workspace.readShare(token); }
   modelTools(scopes, signal, runGuard, binding = {}) {
     requireThat(Array.isArray(scopes) && scopes.every(scope => allScopes.includes(scope)), 'INVALID_SCOPES', '数据访问范围无效。');
-    return catalog.filter(o => o.model && scopes.includes(o.scope)).map(o => ({ name: o.operation.replaceAll('.', '_'), label: o.title, description: o.description, parameters: o.inputSchema,
+    return catalog.filter(o => o.model && (o.requiredScopes??[o.scope]).every(scope=>scopes.includes(scope))).map(o => ({ name: o.operation.replaceAll('.', '_'), label: o.title, description: o.description, parameters: o.inputSchema,
       execute: async (_toolCallId, args, toolSignal) => {
         try { runGuard?.(); const value = await this.execute(o.operation, args, { actor: 'model', allowedScopes: scopes, signal: toolSignal ?? signal, ...binding }); return { content: [{ type: 'text', text: JSON.stringify(value) }], details: value }; }
         catch (error) { const failure = errorBody(error); return { content: [{ type: 'text', text: JSON.stringify({ error: failure }) }], details: { error: failure }, isError: true }; }

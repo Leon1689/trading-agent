@@ -1,14 +1,14 @@
 # Technical design
 
-Application 3.3.0 separates business operations, calculation, storage, runtime integration, and broker execution. The primary entry is the standalone application; legacy adapters are optional compatibility components.
+Application 3.4.0 separates business operations, calculation, storage, runtime integration, and broker execution. The primary entry is the standalone application; legacy adapters are optional compatibility components.
 
 ## Operation contract
 
 `TradingService.execute(operation, args, context)` resolves the operation descriptor, checks the bound caller and scopes, validates the schema, dispatches the handler, and records input/result hashes or a safe error code.
 
-Each catalog entry contains `operation`, `title`, `description`, `group`, `kind`, `scope`, `model`, `inputSchema`, and `example`. Unknown fields are rejected where the contract requires a closed object. Runtime handlers perform semantic validation in addition to schema checks.
+Each catalog entry contains `operation`, `title`, `description`, `group`, `kind`, `scope`, optional `requiredScopes`, `model`, `inputSchema`, and `example`. Unknown fields are rejected where the contract requires a closed object. Runtime handlers perform semantic validation in addition to schema checks.
 
-The catalog contains 101 operations. Only the 57 entries marked for model use can become tools, and the current scope further restricts them. The remaining 44 operations are human-only. Built-in runtime tools are managed separately.
+The catalog contains 107 operations. Only the 60 entries marked for model use can become tools, and the current scope further restricts them. The remaining 47 operations are human-only. Built-in runtime tools are managed separately.
 
 - HTTP handlers bind the caller as human after local authentication and request checks.
 - Runtime tool adapters bind the caller as model and supply the granted scopes.
@@ -36,7 +36,7 @@ Web computer tools run in sandboxed workers without network access or inherited 
 
 `TradingStore` stores versioned records with `(kind, id)` keys, revision numbers, JSON bodies, and timestamps. An expected revision of zero creates exclusively; updates require the revision that was read. Local transactions never wait for network calls. Audit events are append-only.
 
-Record families include chat projections, files, reports, portfolios, watchlists, notifications, alerts, provider snapshots, local paper accounts/orders, conditional previews, and trade intents.
+Record families include chat projections, files, reports, portfolios, watchlists, notifications, alerts, provider snapshots, local paper accounts/orders, conditional previews, trade intents, reconciliation reports, and per-order watches.
 
 The SDK’s `SessionManager` owns the JSONL tree. The application records native user entry IDs for branch operations and exports the original JSONL. Interrupted runs retain their status and can be recovered explicitly without replaying the previous request.
 
@@ -79,3 +79,7 @@ Provider transports use fixed endpoints, credential references, timeouts, respon
 ## Validation
 
 `npm test` covers public contracts with isolated data directories, actual SDK/CLI execution, and synthetic model/provider responses. `npm run check` validates JavaScript and manifests. See [verification](verification.md) for the distinction between local protocol tests and external acceptance.
+
+## Reconciliation and background status
+
+[Reconciliation and monitoring](reconciliation-and-monitoring.md) defines six new operations, records, exact quantity comparisons and worker behavior. Report reads require broker + ledger + trade scopes together. Human review does not post cash flows or certify Wheel evidence. The independent worker has persisted leases and invalidates delayed responses on pause; it can only query orders through the existing gateway. Unchanged observations preserve intent revisions and confirmation; changed receipts invalidate them.

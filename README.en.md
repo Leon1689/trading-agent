@@ -59,3 +59,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [ver
 ## License
 
 [MIT](LICENSE). Upstream attribution is preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Reconciliation and monitoring
+
+Version 3.4 adds saved position/execution comparisons with explicit account and contract mappings, plus per-order opt-in background status queries. Reports do not post to the ledger; monitoring never submits or replays an order. See [usage, contracts and limits](docs/reconciliation-and-monitoring.md). Run `node examples/reconciliation.mjs` for an offline synthetic example.

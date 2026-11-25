@@ -9,7 +9,7 @@ import { TradingError, errorBody } from '../../packages/trading/errors.js';
 import { locales } from '../../packages/trading/locales.js';
 import { createStandaloneRuntime } from './runtime.js';
 const root = join(dirname(fileURLToPath(import.meta.url)), 'web');
-const assets = new Map([['/','index.html'],['/index.html','index.html'],['/app.js','app.js'],['/ui-model.js','ui-model.js'],['/copy.js','copy.js'],['/conversations.js','conversations.js'],['/trades.js','trades.js'],['/ledger.js','ledger.js'],['/styles.css','styles.css'],['/manifest.webmanifest','manifest.webmanifest'],['/sw.js','sw.js'],['/icon.svg','icon.svg']]);
+const assets = new Map([['/','index.html'],['/index.html','index.html'],['/app.js','app.js'],['/ui-model.js','ui-model.js'],['/copy.js','copy.js'],['/conversations.js','conversations.js'],['/trades.js','trades.js'],['/reconciliation.js','reconciliation.js'],['/ledger.js','ledger.js'],['/styles.css','styles.css'],['/manifest.webmanifest','manifest.webmanifest'],['/sw.js','sw.js'],['/icon.svg','icon.svg']]);
 const types = { html:'text/html; charset=utf-8',js:'text/javascript; charset=utf-8',css:'text/css; charset=utf-8',webmanifest:'application/manifest+json',svg:'image/svg+xml' };
 const equal = (a, b) => { const x=Buffer.from(a ?? ''),y=Buffer.from(b ?? '');return x.length===y.length&&timingSafeEqual(x,y); };
 const htmlEscape = s => String(s).replace(/[&<>"']/g, x => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
@@ -92,7 +92,7 @@ export async function startServer({ home, config, port=3100, runtime: suppliedRu
   try{await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',resolve);});}
   catch(error){await runtime.close();throw error;}
   authority=`127.0.0.1:${server.address().port}`;origin=`http://${authority}`;
-  const schedule=()=>{if(closing)return;timer=setTimeout(()=>{tick=runtime.service.tick(shutdown.signal).catch(error=>{if(!closing)runtime.service.store.append({operation:'scheduler.tick',status:'ERROR',error:errorBody(error)});}).finally(schedule);},runtime.config.scheduler.pollMs);timer.unref?.();};
-  if(runtime.config.scheduler.enabled)schedule();
+  const schedule=()=>{if(closing)return;timer=setTimeout(()=>{tick=runtime.service.backgroundTick(shutdown.signal).catch(error=>{if(!closing)runtime.service.store.append({operation:'scheduler.tick',status:'ERROR',error:errorBody(error)});}).finally(schedule);},Math.min(...[runtime.config.scheduler.enabled?runtime.config.scheduler.pollMs:Infinity,runtime.config.orderMonitoring.enabled?runtime.config.orderMonitoring.pollMs:Infinity]));timer.unref?.();};
+  if(runtime.config.scheduler.enabled||runtime.config.orderMonitoring.enabled)schedule();
   return {origin,url:`${origin}/auth?token=${launchToken}`,runtime,server,close:async()=>{if(closing)return;closing=true;shutdown.abort();clearTimeout(timer);const closed=new Promise(resolve=>server.close(resolve));server.closeIdleConnections();await Promise.allSettled([...active,...(tick?[tick]:[])]);await closed;await runtime.close();}};
 }

@@ -114,13 +114,13 @@ test('IBKR snapshot paginates positions, filters unrelated activity and separate
     if (url.pathname.endsWith('/positions/0')) return response(Array.from({ length: 100 }, (_, i) => ({ acctId: 'DU1', conid: i, position: 2, currency: 'USD' })));
     if (url.pathname.endsWith('/positions/1')) return response([{ acctId: 'DU1', conid: 100, position: 3, avgCost: 50 }]);
     if (url.pathname.endsWith('/orders')) return response({ snapshot: true, orders: [{ account: 'DU1', orderId: 1 }, { account: 'DU2', orderId: 2 }] });
-    if (url.pathname.endsWith('/trades')) return response([{ account: 'DU1', execution_id: 'e1', price: '2.5', size: 1 }, { account: 'DU2', execution_id: 'e2', price: '4', size: 1 }]);
+    if (url.pathname.endsWith('/trades')) return response([{ account: 'DU1', execution_id: 'e1', order_ref: 'synthetic-ref', price: '2.5', size: 1 }, { account: 'DU2', execution_id: 'e2', price: '4', size: 1 }]);
     assert.fail(url.pathname);
   } });
   const result = await p.request('broker.snapshot', { accountId: 'DU1' });
   assert.equal(result.data.positions.length, 101); assert.equal(result.data.coverage.positionsComplete, true);
   assert.equal(result.data.cash.length, 1); assert.equal(result.data.cash[0].settledCash, '9000');
-  assert.equal(result.data.orders.length, 1); assert.equal(result.data.executions.length, 1);
+  assert.equal(result.data.orders.length, 1); assert.equal(result.data.executions.length, 1); assert.equal(result.data.executions[0].accountId, 'DU1'); assert.equal(result.data.executions[0].orderRef, 'synthetic-ref');
   assert.equal(result.data.coverage.historicalLedgerComplete, false); assert.equal(result.complete, false);
   assert.equal(result.asOf, null); assert.equal(calls.length, 7);
 });
