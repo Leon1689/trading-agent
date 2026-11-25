@@ -1,0 +1,13 @@
+- insert:
+    - id: trading-workbench
+      name: '@local/trading-workbench'
+    - id: preset-trading-research
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: trading-research
+        name: 交易研究模式
+        description: 行情、财报、期权计算、组合回测与预测市场研究；账户接入只读，订单确认不交给模型。
+        order: 5
+        plugins:
+          - id: trading-research-tools
+            name: '@local/trading-workbench/agent'

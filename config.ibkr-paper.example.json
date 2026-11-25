@@ -1,0 +1,103 @@
+{
+  "execution": {
+    "mode": "IBKR_PAPER",
+    "ibkr": {
+      "baseUrl": "https://localhost:5000/v1/api",
+      "environment": "PAPER",
+      "accountIds": [
+        "DU1234567"
+      ]
+    }
+  },
+  "pi": {
+    "enabled": false,
+    "provider": "",
+    "model": "",
+    "apiKeyEnv": "",
+    "timeoutMs": 120000,
+    "maxToolCalls": 12,
+    "maxModelCalls": 8,
+    "maxTokens": 4096,
+    "maxMessages": 300,
+    "native": {
+      "agentDir": null,
+      "settingsSource": "memory",
+      "settings": {
+        "compaction": {
+          "enabled": true
+        },
+        "retry": {
+          "enabled": true
+        },
+        "defaultThinkingLevel": "medium",
+        "cacheWarming": "off"
+      },
+      "resources": {
+        "enabled": true,
+        "contextFiles": true,
+        "skills": true,
+        "prompts": true,
+        "themes": true,
+        "extensions": true,
+        "mcp": true,
+        "skillPaths": [],
+        "promptPaths": [],
+        "themePaths": [],
+        "extensionPaths": []
+      },
+      "tools": [
+        "read",
+        "bash",
+        "edit",
+        "write"
+      ],
+      "expandPromptTemplates": true,
+      "permissions": {
+        "readPaths": [],
+        "writePaths": [],
+        "network": [],
+        "processExecution": false,
+        "clipboard": false,
+        "loopbackListenPorts": []
+      },
+      "environment": {}
+    }
+  },
+  "providers": {
+    "mode": "live",
+    "predict": {
+      "enabled": false
+    },
+    "limits": {
+      "timeoutMs": 15000,
+      "maxBytes": 2097152,
+      "maxItems": 5000,
+      "maxPages": 5,
+      "minIntervalMs": 250
+    }
+  },
+  "scheduler": {
+    "enabled": false,
+    "pollMs": 30000,
+    "minIntervalMs": 60000
+  },
+  "limits": {
+    "requestBytes": 4194304,
+    "textFileBytes": 1048576,
+    "imageBytes": 2097152,
+    "listLimit": 200,
+    "orderPreviewTtlMs": 300000
+  },
+  "computer": {
+    "workspace": null,
+    "files": {
+      "read": true,
+      "write": true
+    },
+    "shell": {
+      "enabled": true,
+      "write": true,
+      "timeoutMs": 30000
+    }
+  }
+}

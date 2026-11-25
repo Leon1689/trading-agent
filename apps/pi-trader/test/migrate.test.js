@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync,rmSync,mkdirSync,existsSync,readdirSync,statSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {tmpdir} from 'node:os';
+import {DatabaseSync,backup} from 'node:sqlite';
+import {migrateLegacy} from '../migrate.js';
+function setup(t){const parent=mkdtempSync(join(tmpdir(),'pi-migrate-'));t.after(()=>rmSync(parent,{recursive:true,force:true}));const source=join(parent,'source');for(const p of ['data/options-ledger/ledger.sqlite','data/trading-workbench/workbench.sqlite']){mkdirSync(join(source,p,'..'),{recursive:true});const db=new DatabaseSync(join(source,p));db.exec('CREATE TABLE evidence(v TEXT); INSERT INTO evidence VALUES(\'synthetic-only\')');db.close();}writeFileSync(join(source,'config.json'),'do not copy this configuration');return{parent,source,home:join(parent,'destination')};}
+test('migration publishes both consistent copies and never copies provider configuration',async t=>{const a=setup(t);const result=await migrateLegacy({sourceHome:a.source,home:a.home});assert.equal(result.sourceChanged,false);assert.equal(existsSync(join(a.home,'config.json')),false);for(const name of result.copied){assert.equal(statSync(join(a.home,name)).mode&0o777,0o600);const db=new DatabaseSync(join(a.home,name));assert.equal(db.prepare('SELECT v FROM evidence').get().v,'synthetic-only');db.close();}assert.equal(statSync(a.home).mode&0o777,0o700);});
+test('second-copy failure leaves no published partial home and can be retried',async t=>{const a=setup(t);let calls=0;await assert.rejects(migrateLegacy({sourceHome:a.source,home:a.home,backupFn:async(db,path)=>{if(++calls===2)throw Error('synthetic disk failure');return backup(db,path);}}),/synthetic disk failure/);assert.equal(existsSync(a.home),false);assert.deepEqual(readdirSync(a.parent),['source']);await migrateLegacy({sourceHome:a.source,home:a.home});assert.equal(existsSync(join(a.home,'workbench.sqlite')),true);});
+test('migration refuses an existing target before touching its data',async t=>{const a=setup(t);mkdirSync(a.home);writeFileSync(join(a.home,'user-file.txt'),'keep');await assert.rejects(migrateLegacy({sourceHome:a.source,home:a.home}),e=>e.code==='TARGET_NOT_EMPTY');assert.equal(existsSync(join(a.home,'user-file.txt')),true);});

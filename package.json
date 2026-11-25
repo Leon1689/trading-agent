@@ -1,0 +1,40 @@
+{
+  "name": "pi-trading-agent",
+  "version": "3.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test packages/ledger/test/*.test.js packages/trading/test/*.test.js apps/pi-trader/test/*.test.js",
+    "check": "node scripts/check.mjs",
+    "pack": "node scripts/pack.mjs",
+    "install:harness": "node scripts/install.mjs",
+    "start": "node apps/pi-trader/cli.js serve",
+    "agent": "node apps/pi-trader/cli.js run",
+    "doctor": "node apps/pi-trader/cli.js doctor",
+    "native": "node apps/pi-trader/cli.js native",
+    "check:publication": "node scripts/check-publication.mjs"
+  },
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "1.6.0"
+  },
+  "description": "Pi-powered options research, strategy ledger, and human-confirmed IBKR paper trading.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Leon1689/pi-trading-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Leon1689/pi-trading-agent/issues"
+  },
+  "homepage": "https://github.com/Leon1689/pi-trading-agent#readme",
+  "engines": {
+    "node": ">=26.0.0 <27"
+  },
+  "keywords": [
+    "pi-agent",
+    "options",
+    "greeks",
+    "ibkr",
+    "paper-trading"
+  ]
+}

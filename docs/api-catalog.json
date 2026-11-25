@@ -1,0 +1,3897 @@
+[
+  {
+    "operation": "market.quote",
+    "title": "股票报价",
+    "description": "股票报价",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码，例如AAPL"
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多返回条数",
+          "minimum": 1,
+          "maximum": 5000
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "AAPL"
+    }
+  },
+  {
+    "operation": "market.profile",
+    "title": "公司资料与估值字段",
+    "description": "公司资料与估值字段",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码，例如AAPL"
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多返回条数",
+          "minimum": 1,
+          "maximum": 5000
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "AAPL"
+    }
+  },
+  {
+    "operation": "market.financials",
+    "title": "财务报表",
+    "description": "财务报表",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码，例如AAPL"
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多返回条数",
+          "minimum": 1,
+          "maximum": 5000
+        },
+        "statement": {
+          "type": "string",
+          "description": "报表",
+          "enum": [
+            "income",
+            "balance",
+            "cashflow",
+            "ratios"
+          ]
+        },
+        "period": {
+          "type": "string",
+          "description": "周期",
+          "enum": [
+            "annual",
+            "quarter"
+          ]
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "AAPL",
+      "statement": "income",
+      "period": "quarter",
+      "limit": 4
+    }
+  },
+  {
+    "operation": "market.analysts",
+    "title": "分析师共识",
+    "description": "分析师共识",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码，例如AAPL"
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多返回条数",
+          "minimum": 1,
+          "maximum": 5000
+        },
+        "kind": {
+          "type": "string",
+          "description": "评级、目标价或预测",
+          "enum": [
+            "ratings",
+            "targets",
+            "estimates"
+          ]
+        },
+        "period": {
+          "type": "string",
+          "description": "预测周期",
+          "enum": [
+            "annual",
+            "quarter"
+          ]
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "AAPL",
+      "kind": "ratings"
+    }
+  },
+  {
+    "operation": "market.news",
+    "title": "新闻与热点",
+    "description": "新闻与热点",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码，例如AAPL"
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多返回条数",
+          "minimum": 1,
+          "maximum": 5000
+        },
+        "from": {
+          "type": "string",
+          "description": "开始日期"
+        },
+        "to": {
+          "type": "string",
+          "description": "结束日期"
+        },
+        "page": {
+          "type": "number",
+          "description": "分页编号，从0开始"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {
+      "limit": 10
+    }
+  },
+  {
+    "operation": "market.history",
+    "title": "历史复权价格",
+    "description": "历史复权价格",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码，例如AAPL"
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多返回条数",
+          "minimum": 1,
+          "maximum": 5000
+        },
+        "from": {
+          "type": "string",
+          "description": "开始日期YYYY-MM-DD"
+        },
+        "to": {
+          "type": "string",
+          "description": "结束日期YYYY-MM-DD"
+        }
+      },
+      "required": [
+        "symbol",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "SPY",
+      "from": "2025-01-01",
+      "to": "2025-12-31",
+      "limit": 1000
+    }
+  },
+  {
+    "operation": "market.screen",
+    "title": "市场榜单",
+    "description": "市场榜单",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "类别",
+          "enum": [
+            "gainers",
+            "losers",
+            "active",
+            "filter"
+          ]
+        },
+        "limit": {
+          "type": "number",
+          "description": "数量"
+        },
+        "sector": {
+          "type": "string",
+          "description": "行业大类"
+        },
+        "industry": {
+          "type": "string",
+          "description": "细分行业"
+        },
+        "country": {
+          "type": "string",
+          "description": "国家"
+        },
+        "exchange": {
+          "type": "string",
+          "description": "交易所"
+        },
+        "marketCapMoreThan": {
+          "type": "number",
+          "description": "市值下界"
+        },
+        "marketCapLowerThan": {
+          "type": "number",
+          "description": "市值上界"
+        },
+        "priceMoreThan": {
+          "type": "number",
+          "description": "价格下界"
+        },
+        "priceLowerThan": {
+          "type": "number",
+          "description": "价格上界"
+        },
+        "volumeMoreThan": {
+          "type": "number",
+          "description": "成交量下界"
+        }
+      },
+      "required": [
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "category": "active",
+      "limit": 10
+    }
+  },
+  {
+    "operation": "market.earnings",
+    "title": "财报日历",
+    "description": "财报日历",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "开始日期"
+        },
+        "to": {
+          "type": "string",
+          "description": "结束日期"
+        },
+        "limit": {
+          "type": "number",
+          "description": "数量"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "research.compare",
+    "title": "股票对比与研究资料",
+    "description": "股票对比与研究资料",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbols": {
+          "type": "array",
+          "description": "股票列表",
+          "items": {
+            "type": "string",
+            "description": "代码"
+          }
+        },
+        "sections": {
+          "type": "array",
+          "description": "研究章节",
+          "items": {
+            "type": "string",
+            "description": "数据类别",
+            "enum": [
+              "quote",
+              "profile",
+              "financials",
+              "analysts",
+              "news"
+            ]
+          }
+        }
+      },
+      "required": [
+        "symbols",
+        "sections"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbols": [
+        "AAPL",
+        "MSFT"
+      ],
+      "sections": [
+        "quote",
+        "profile",
+        "financials",
+        "news"
+      ]
+    }
+  },
+  {
+    "operation": "research.brief",
+    "title": "观察列表每日简报",
+    "description": "观察列表每日简报",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbols": {
+          "type": "array",
+          "description": "股票列表",
+          "items": {
+            "type": "string",
+            "description": "代码"
+          }
+        }
+      },
+      "required": [
+        "symbols"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbols": [
+        "AAPL",
+        "MSFT"
+      ]
+    }
+  },
+  {
+    "operation": "broker.accounts",
+    "title": "可读取账户",
+    "description": "可读取账户",
+    "group": "research",
+    "kind": "read",
+    "scope": "broker",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "broker.snapshot",
+    "title": "券商只读账户快照",
+    "description": "券商只读账户快照",
+    "group": "research",
+    "kind": "read",
+    "scope": "broker",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "服务配置中允许的账户ID"
+        }
+      },
+      "required": [
+        "accountId"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "snapshot.list",
+    "title": "保存的券商快照",
+    "description": "保存的券商快照",
+    "group": "research",
+    "kind": "read",
+    "scope": "broker",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "snapshot.get",
+    "title": "读取固定快照",
+    "description": "读取固定快照",
+    "group": "research",
+    "kind": "read",
+    "scope": "broker",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "market.options",
+    "title": "期权链与原生Greeks",
+    "description": "期权链与原生Greeks",
+    "group": "options",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码，例如AAPL"
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多返回条数",
+          "minimum": 1,
+          "maximum": 5000
+        },
+        "from": {
+          "type": "string",
+          "description": "到期起始日期"
+        },
+        "to": {
+          "type": "string",
+          "description": "到期结束日期"
+        },
+        "right": {
+          "type": "string",
+          "description": "方向",
+          "enum": [
+            "CALL",
+            "PUT"
+          ]
+        },
+        "cursor": {
+          "type": "string",
+          "description": "上一页返回的nextCursor"
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "AAPL",
+      "limit": 20
+    }
+  },
+  {
+    "operation": "quant.price",
+    "title": "期权定价与Greeks",
+    "description": "期权定价与Greeks",
+    "group": "options",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "description": "定价模型",
+          "enum": [
+            "BLACK_SCHOLES",
+            "CRR"
+          ]
+        },
+        "right": {
+          "type": "string",
+          "description": "期权方向",
+          "enum": [
+            "CALL",
+            "PUT"
+          ]
+        },
+        "spot": {
+          "type": "number",
+          "description": "标的价格"
+        },
+        "strike": {
+          "type": "number",
+          "description": "执行价"
+        },
+        "timeYears": {
+          "type": "number",
+          "description": "剩余年数"
+        },
+        "rate": {
+          "type": "number",
+          "description": "年化连续复利无风险利率，例如0.05"
+        },
+        "dividendYield": {
+          "type": "number",
+          "description": "年化连续分红率"
+        },
+        "volatility": {
+          "type": "number",
+          "description": "年化波动率，例如0.20"
+        },
+        "steps": {
+          "type": "number",
+          "description": "CRR步数"
+        }
+      },
+      "required": [
+        "model",
+        "right",
+        "spot",
+        "strike",
+        "timeYears",
+        "rate",
+        "dividendYield",
+        "volatility"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "model": "BLACK_SCHOLES",
+      "right": "CALL",
+      "spot": 100,
+      "strike": 100,
+      "timeYears": 0.0821917808219178,
+      "rate": 0.05,
+      "dividendYield": 0,
+      "volatility": 0.2
+    }
+  },
+  {
+    "operation": "quant.iv",
+    "title": "求隐含波动率",
+    "description": "求隐含波动率",
+    "group": "options",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "description": "定价模型",
+          "enum": [
+            "BLACK_SCHOLES",
+            "CRR"
+          ]
+        },
+        "right": {
+          "type": "string",
+          "description": "期权方向",
+          "enum": [
+            "CALL",
+            "PUT"
+          ]
+        },
+        "spot": {
+          "type": "number",
+          "description": "标的价格"
+        },
+        "strike": {
+          "type": "number",
+          "description": "执行价"
+        },
+        "timeYears": {
+          "type": "number",
+          "description": "剩余年数"
+        },
+        "rate": {
+          "type": "number",
+          "description": "年化连续复利无风险利率，例如0.05"
+        },
+        "dividendYield": {
+          "type": "number",
+          "description": "年化连续分红率"
+        },
+        "volatility": {
+          "type": "number",
+          "description": "年化波动率，例如0.20"
+        },
+        "steps": {
+          "type": "number",
+          "description": "CRR步数"
+        },
+        "targetPrice": {
+          "type": "number",
+          "description": "目标期权价格"
+        },
+        "minVol": {
+          "type": "number",
+          "description": "求解下界"
+        },
+        "maxVol": {
+          "type": "number",
+          "description": "求解上界"
+        },
+        "tolerance": {
+          "type": "number",
+          "description": "价格容差"
+        },
+        "maxIterations": {
+          "type": "number",
+          "description": "最大迭代次数"
+        }
+      },
+      "required": [
+        "model",
+        "right",
+        "spot",
+        "strike",
+        "timeYears",
+        "rate",
+        "dividendYield",
+        "targetPrice",
+        "minVol",
+        "maxVol",
+        "tolerance",
+        "maxIterations"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "model": "BLACK_SCHOLES",
+      "right": "CALL",
+      "spot": 100,
+      "strike": 100,
+      "timeYears": 0.0821917808219178,
+      "rate": 0.05,
+      "dividendYield": 0,
+      "volatility": 0.2,
+      "targetPrice": 2.49337682,
+      "minVol": 0.001,
+      "maxVol": 4,
+      "tolerance": 1e-7,
+      "maxIterations": 200
+    }
+  },
+  {
+    "operation": "quant.scenario",
+    "title": "价格、波动率与时间情景",
+    "description": "价格、波动率与时间情景",
+    "group": "options",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "option": {
+          "type": "object",
+          "description": "完整定价参数",
+          "additionalProperties": true
+        },
+        "shocks": {
+          "type": "array",
+          "description": "冲击情景",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "signedContracts": {
+          "type": "number",
+          "description": "有符号合约数量"
+        },
+        "multiplier": {
+          "type": "number",
+          "description": "核实后的报价乘数"
+        }
+      },
+      "required": [
+        "option",
+        "shocks",
+        "signedContracts",
+        "multiplier"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "option": {
+        "model": "BLACK_SCHOLES",
+        "right": "CALL",
+        "spot": 100,
+        "strike": 100,
+        "timeYears": 0.0821917808219178,
+        "rate": 0.05,
+        "dividendYield": 0,
+        "volatility": 0.2
+      },
+      "shocks": [
+        {
+          "spotChangePct": -0.1,
+          "volatilityChange": 0.05,
+          "daysElapsed": 1
+        }
+      ],
+      "signedContracts": -1,
+      "multiplier": 100
+    }
+  },
+  {
+    "operation": "wheel.analyze",
+    "title": "Wheel硬约束检查",
+    "description": "Wheel硬约束检查",
+    "group": "options",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "description": "策略",
+          "enum": [
+            "CC",
+            "CSP"
+          ]
+        },
+        "symbol": {
+          "type": "string",
+          "description": "标的"
+        },
+        "currency": {
+          "type": "string",
+          "description": "币种"
+        },
+        "position": {
+          "type": "object",
+          "description": "已核对N/P/Q与confirmed",
+          "additionalProperties": true
+        },
+        "cash": {
+          "type": "object",
+          "description": "现金金额、口径与confirmed",
+          "additionalProperties": true
+        },
+        "existingObligations": {
+          "type": "array",
+          "description": "现有义务；空数组表示已核实为空",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "stockReservations": {
+          "type": "array",
+          "description": "其他占股；空数组表示已核实为空",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "candidates": {
+          "type": "array",
+          "description": "拟议候选集合",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "cashBuffer": {
+          "type": "number",
+          "description": "现金缓冲"
+        },
+        "estimatedFees": {
+          "type": "number",
+          "description": "预计费用"
+        },
+        "dataQuality": {
+          "type": "object",
+          "description": "fresh/reconciled/complete",
+          "additionalProperties": true
+        },
+        "riskChecks": {
+          "type": "object",
+          "description": "交割意愿/批次/流动性/事件/集中度",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "strategy",
+        "symbol",
+        "currency",
+        "candidates"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "options.rank",
+    "title": "期权候选筛选",
+    "description": "期权候选筛选",
+    "group": "options",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "description": "包含报价与Greeks的候选",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "criteria": {
+          "type": "object",
+          "description": "用户明确的筛选阈值",
+          "additionalProperties": true
+        },
+        "limit": {
+          "type": "number",
+          "description": "最多候选数"
+        }
+      },
+      "required": [
+        "candidates",
+        "criteria",
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "ledger.read",
+    "title": "读取原有期权账本",
+    "description": "读取原有期权账本",
+    "group": "options",
+    "kind": "read",
+    "scope": "ledger",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "ledger.propose",
+    "title": "提交原账本修改草稿",
+    "description": "提交原账本修改草稿",
+    "group": "options",
+    "kind": "write",
+    "scope": "ledger",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": "number",
+          "description": "账本当前版本"
+        },
+        "requestId": {
+          "type": "string",
+          "description": "幂等请求ID"
+        },
+        "action": {
+          "type": "string",
+          "description": "操作",
+          "enum": [
+            "savePosition",
+            "saveTrade",
+            "assign"
+          ]
+        },
+        "data": {
+          "type": "object",
+          "description": "原账本操作参数",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "revision",
+        "requestId",
+        "action",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "portfolio.risk",
+    "title": "组合敞口与风险",
+    "description": "组合敞口与风险",
+    "group": "portfolios",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "统一币种"
+        },
+        "cash": {
+          "type": "number",
+          "description": "现金"
+        },
+        "positions": {
+          "type": "array",
+          "description": "仓位、方向、乘数和Greeks",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "currency",
+        "cash",
+        "positions"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "portfolio.save",
+    "title": "保存研究组合",
+    "description": "保存研究组合",
+    "group": "portfolios",
+    "kind": "write",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "组合名"
+        },
+        "weights": {
+          "type": "object",
+          "description": "股票权重",
+          "additionalProperties": true
+        },
+        "note": {
+          "type": "string",
+          "description": "研究说明"
+        }
+      },
+      "required": [
+        "name",
+        "weights"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "name": "研究组合",
+      "weights": {
+        "SPY": 0.6,
+        "TLT": 0.4
+      },
+      "note": "仅研究"
+    }
+  },
+  {
+    "operation": "portfolio.list",
+    "title": "研究组合列表",
+    "description": "研究组合列表",
+    "group": "portfolios",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "portfolio.get",
+    "title": "读取研究组合",
+    "description": "读取研究组合",
+    "group": "portfolios",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "portfolio.backtest",
+    "title": "回测上传的总回报序列",
+    "description": "回测上传的总回报序列",
+    "group": "portfolios",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "initialCapital": {
+          "type": "number",
+          "description": "虚拟本金"
+        },
+        "weights": {
+          "type": "object",
+          "description": "股票代码与权重",
+          "additionalProperties": true
+        },
+        "series": {
+          "type": "object",
+          "description": "按标的的日期和复权总回报序列",
+          "additionalProperties": true
+        },
+        "seriesKind": {
+          "type": "string",
+          "description": "序列性质",
+          "enum": [
+            "ADJUSTED_TOTAL_RETURN"
+          ]
+        },
+        "dataFrequency": {
+          "type": "string",
+          "description": "数据频率",
+          "enum": [
+            "DAILY",
+            "ANNUAL"
+          ]
+        },
+        "rebalance": {
+          "type": "string",
+          "description": "再平衡频率",
+          "enum": [
+            "MONTHLY",
+            "ANNUAL",
+            "NONE"
+          ]
+        },
+        "costBps": {
+          "type": "number",
+          "description": "每侧交易成本基点"
+        },
+        "annualRiskFreeRate": {
+          "type": "number",
+          "description": "Sharpe基准年利率"
+        },
+        "periodsPerYear": {
+          "type": "number",
+          "description": "年化周期数"
+        },
+        "benchmarkSymbol": {
+          "type": "string",
+          "description": "基准标的"
+        }
+      },
+      "required": [
+        "initialCapital",
+        "weights",
+        "series",
+        "seriesKind",
+        "dataFrequency",
+        "rebalance",
+        "costBps",
+        "annualRiskFreeRate",
+        "periodsPerYear"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "portfolio.backtestLive",
+    "title": "获取历史数据并回测",
+    "description": "获取历史数据并回测",
+    "group": "portfolios",
+    "kind": "compute",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "initialCapital": {
+          "type": "number",
+          "description": "虚拟本金"
+        },
+        "weights": {
+          "type": "object",
+          "description": "股票代码与权重",
+          "additionalProperties": true
+        },
+        "series": {
+          "type": "object",
+          "description": "按标的的日期和复权总回报序列",
+          "additionalProperties": true
+        },
+        "seriesKind": {
+          "type": "string",
+          "description": "序列性质",
+          "enum": [
+            "ADJUSTED_TOTAL_RETURN"
+          ]
+        },
+        "dataFrequency": {
+          "type": "string",
+          "description": "数据频率",
+          "enum": [
+            "DAILY",
+            "ANNUAL"
+          ]
+        },
+        "rebalance": {
+          "type": "string",
+          "description": "再平衡频率",
+          "enum": [
+            "MONTHLY",
+            "ANNUAL",
+            "NONE"
+          ]
+        },
+        "costBps": {
+          "type": "number",
+          "description": "每侧交易成本基点"
+        },
+        "annualRiskFreeRate": {
+          "type": "number",
+          "description": "Sharpe基准年利率"
+        },
+        "periodsPerYear": {
+          "type": "number",
+          "description": "年化周期数"
+        },
+        "benchmarkSymbol": {
+          "type": "string",
+          "description": "基准标的"
+        },
+        "from": {
+          "type": "string",
+          "description": "开始日期"
+        },
+        "to": {
+          "type": "string",
+          "description": "结束日期"
+        }
+      },
+      "required": [
+        "initialCapital",
+        "weights",
+        "from",
+        "to",
+        "rebalance",
+        "costBps",
+        "annualRiskFreeRate",
+        "periodsPerYear"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "predict.markets",
+    "title": "预测市场发现",
+    "description": "预测市场发现",
+    "group": "predict",
+    "kind": "read",
+    "scope": "predict",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "description": "平台",
+          "enum": [
+            "kalshi",
+            "polymarket"
+          ]
+        },
+        "limit": {
+          "type": "number",
+          "description": "数量"
+        },
+        "status": {
+          "type": "string",
+          "description": "Kalshi状态",
+          "enum": [
+            "unopened",
+            "open",
+            "closed",
+            "settled"
+          ]
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Kalshi分页游标"
+        },
+        "eventId": {
+          "type": "string",
+          "description": "Kalshi事件标识"
+        },
+        "offset": {
+          "type": "number",
+          "description": "Polymarket分页偏移"
+        },
+        "closed": {
+          "type": "boolean",
+          "description": "Polymarket已关闭市场"
+        },
+        "slug": {
+          "type": "string",
+          "description": "Polymarket精确slug"
+        }
+      },
+      "required": [
+        "platform"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "platform": "kalshi",
+      "limit": 10
+    }
+  },
+  {
+    "operation": "predict.detail",
+    "title": "预测市场详情与结果",
+    "description": "预测市场详情与结果",
+    "group": "predict",
+    "kind": "read",
+    "scope": "predict",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "description": "平台",
+          "enum": [
+            "kalshi",
+            "polymarket"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "description": "市场ID"
+        }
+      },
+      "required": [
+        "platform",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "watchlist.add",
+    "title": "收藏市场或证券",
+    "description": "收藏市场或证券",
+    "group": "predict",
+    "kind": "write",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "平台+市场ID或证券ID"
+        },
+        "title": {
+          "type": "string",
+          "description": "显示名称"
+        },
+        "platform": {
+          "type": "string",
+          "description": "平台"
+        },
+        "marketId": {
+          "type": "string",
+          "description": "市场ID"
+        },
+        "symbol": {
+          "type": "string",
+          "description": "证券代码"
+        }
+      },
+      "required": [
+        "key",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "watchlist.list",
+    "title": "收藏列表",
+    "description": "收藏列表",
+    "group": "predict",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "watchlist.remove",
+    "title": "移除收藏",
+    "description": "移除收藏",
+    "group": "predict",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "order.preview",
+    "title": "本地模拟订单预览",
+    "description": "本地模拟订单预览",
+    "group": "orders",
+    "kind": "write",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "本地模拟账户ID；只预览可不填"
+        },
+        "symbol": {
+          "type": "string",
+          "description": "证券或期权合约代码"
+        },
+        "assetClass": {
+          "type": "string",
+          "description": "类型",
+          "enum": [
+            "STOCK",
+            "OPTION"
+          ]
+        },
+        "side": {
+          "type": "string",
+          "description": "买卖",
+          "enum": [
+            "BUY",
+            "SELL"
+          ]
+        },
+        "positionEffect": {
+          "type": "string",
+          "description": "开平",
+          "enum": [
+            "OPEN",
+            "CLOSE"
+          ]
+        },
+        "quantity": {
+          "type": "number",
+          "description": "整数数量"
+        },
+        "type": {
+          "type": "string",
+          "description": "订单类型",
+          "enum": [
+            "LIMIT"
+          ]
+        },
+        "limitPrice": {
+          "type": "string",
+          "description": "限价"
+        },
+        "currency": {
+          "type": "string",
+          "description": "币种",
+          "enum": [
+            "USD"
+          ]
+        },
+        "timeInForce": {
+          "type": "string",
+          "description": "有效期",
+          "enum": [
+            "DAY",
+            "GTC"
+          ]
+        },
+        "session": {
+          "type": "string",
+          "description": "交易时段",
+          "enum": [
+            "REGULAR"
+          ]
+        },
+        "estimatedFees": {
+          "type": "string",
+          "description": "估计费用"
+        },
+        "contract": {
+          "type": "object",
+          "description": "期权合约、交割物",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "symbol",
+        "assetClass",
+        "side",
+        "positionEffect",
+        "quantity",
+        "type",
+        "limitPrice",
+        "currency",
+        "timeInForce",
+        "session",
+        "estimatedFees"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "AAPL",
+      "assetClass": "STOCK",
+      "side": "BUY",
+      "positionEffect": "OPEN",
+      "quantity": 1,
+      "type": "LIMIT",
+      "limitPrice": "1.00",
+      "currency": "USD",
+      "timeInForce": "DAY",
+      "session": "REGULAR",
+      "estimatedFees": "0.00"
+    }
+  },
+  {
+    "operation": "order.confirm",
+    "title": "确认本地模拟订单",
+    "description": "确认本地模拟订单",
+    "group": "orders",
+    "kind": "human",
+    "scope": "compute",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "confirmationToken": {
+          "type": "string",
+          "description": "预览中的确认凭证"
+        }
+      },
+      "required": [
+        "id",
+        "confirmationToken"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "order.cancel",
+    "title": "撤销本地模拟订单",
+    "description": "撤销本地模拟订单",
+    "group": "orders",
+    "kind": "human",
+    "scope": "compute",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "order.list",
+    "title": "本地模拟订单簿",
+    "description": "本地模拟订单簿",
+    "group": "orders",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "账户ID"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "paper.create",
+    "title": "创建本地模拟账户",
+    "description": "创建本地模拟账户",
+    "group": "orders",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "账户名"
+        },
+        "initialCash": {
+          "type": "string",
+          "description": "初始虚拟现金"
+        },
+        "currency": {
+          "type": "string",
+          "description": "币种",
+          "enum": [
+            "USD"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "initialCash",
+        "currency"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "name": "本地模拟",
+      "initialCash": "10000.00",
+      "currency": "USD"
+    }
+  },
+  {
+    "operation": "paper.list",
+    "title": "本地模拟账户",
+    "description": "本地模拟账户",
+    "group": "orders",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "paper.get",
+    "title": "模拟现金与持仓",
+    "description": "模拟现金与持仓",
+    "group": "orders",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "paper.fill",
+    "title": "记录明确的模拟成交",
+    "description": "记录明确的模拟成交",
+    "group": "orders",
+    "kind": "human",
+    "scope": "compute",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        },
+        "quantity": {
+          "type": "number",
+          "description": "模拟成交数量"
+        },
+        "price": {
+          "type": "string",
+          "description": "模拟成交价"
+        },
+        "fee": {
+          "type": "string",
+          "description": "模拟手续费"
+        },
+        "eventId": {
+          "type": "string",
+          "description": "唯一模拟成交ID"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "quantity",
+        "price",
+        "fee",
+        "eventId"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "alerts.create",
+    "title": "创建本地价格提醒",
+    "description": "创建本地价格提醒",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "market",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "提醒名"
+        },
+        "sourceOperation": {
+          "type": "string",
+          "description": "只读数据源",
+          "enum": [
+            "market.quote",
+            "predict.detail"
+          ]
+        },
+        "sourceArgs": {
+          "type": "object",
+          "description": "数据源参数",
+          "additionalProperties": true
+        },
+        "field": {
+          "type": "string",
+          "description": "数值字段路径，例如data.0.price"
+        },
+        "comparator": {
+          "type": "string",
+          "description": "条件",
+          "enum": [
+            "gte",
+            "lte"
+          ]
+        },
+        "threshold": {
+          "type": "number",
+          "description": "阈值"
+        },
+        "intervalMs": {
+          "type": "number",
+          "description": "轮询毫秒数"
+        },
+        "maxAgeMs": {
+          "type": "number",
+          "description": "可接受的最大源数据年龄毫秒"
+        },
+        "once": {
+          "type": "boolean",
+          "description": "只触发一次"
+        }
+      },
+      "required": [
+        "name",
+        "sourceOperation",
+        "sourceArgs",
+        "field",
+        "comparator",
+        "threshold",
+        "intervalMs",
+        "maxAgeMs",
+        "once"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "alerts.list",
+    "title": "提醒状态",
+    "description": "提醒状态",
+    "group": "alerts",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "alerts.evaluate",
+    "title": "立即检查提醒",
+    "description": "立即检查提醒",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "market",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "alerts.update",
+    "title": "暂停或恢复提醒",
+    "description": "暂停或恢复提醒",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "notifications.list",
+    "title": "通知中心",
+    "description": "通知中心",
+    "group": "alerts",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "notifications.read",
+    "title": "标记通知已读",
+    "description": "标记通知已读",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "file.import",
+    "title": "导入附件",
+    "description": "导入附件",
+    "group": "files",
+    "kind": "human",
+    "scope": "files",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "文件名"
+        },
+        "content": {
+          "type": "string",
+          "description": "文本内容"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "媒体类型"
+        },
+        "dataBase64": {
+          "type": "string",
+          "description": "图片base64"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "file.list",
+    "title": "已保存文件",
+    "description": "已保存文件",
+    "group": "files",
+    "kind": "read",
+    "scope": "files",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "file.get",
+    "title": "读取文件",
+    "description": "读取文件",
+    "group": "files",
+    "kind": "read",
+    "scope": "files",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "file.export",
+    "title": "导出文件",
+    "description": "导出文件",
+    "group": "files",
+    "kind": "read",
+    "scope": "files",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "file.inspectEvents",
+    "title": "事件去重与现金流复核",
+    "description": "事件去重与现金流复核",
+    "group": "files",
+    "kind": "compute",
+    "scope": "files",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "report.save",
+    "title": "保存Markdown报告",
+    "description": "保存Markdown报告",
+    "group": "files",
+    "kind": "write",
+    "scope": "files",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "文件名.md"
+        },
+        "content": {
+          "type": "string",
+          "description": "报告正文"
+        }
+      },
+      "required": [
+        "name",
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.create",
+    "title": "新建研究会话",
+    "description": "新建研究会话",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "会话名"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {
+      "title": "研究会话"
+    }
+  },
+  {
+    "operation": "chat.list",
+    "title": "搜索会话",
+    "description": "搜索会话",
+    "group": "conversations",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "标题关键词"
+        },
+        "includeArchived": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.get",
+    "title": "读取会话",
+    "description": "读取会话",
+    "group": "conversations",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.update",
+    "title": "改名、置顶或归档",
+    "description": "改名、置顶或归档",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        },
+        "title": {
+          "type": "string",
+          "description": "新标题"
+        },
+        "pinned": {
+          "type": "boolean"
+        },
+        "archived": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.send",
+    "title": "向Pi研究助手提问",
+    "description": "向Pi研究助手提问",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "market",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "message": {
+          "type": "string",
+          "description": "问题"
+        },
+        "allowedScopes": {
+          "type": "array",
+          "description": "本轮允许的数据范围",
+          "items": {
+            "type": "string",
+            "description": "范围",
+            "enum": [
+              "market",
+              "compute",
+              "predict",
+              "portfolio",
+              "files",
+              "ledger",
+              "broker",
+              "localRead",
+              "localWrite",
+              "shell",
+              "resources",
+              "trade"
+            ]
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "description": "本轮图片附件",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "id",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.export",
+    "title": "导出会话Markdown",
+    "description": "导出会话Markdown",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "files",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.recover",
+    "title": "恢复超时中断的会话",
+    "description": "恢复超时中断的会话",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "读取结果中的revision",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.feedback",
+    "title": "记录回答反馈",
+    "description": "记录回答反馈",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "messageIndex": {
+          "type": "number",
+          "description": "消息序号"
+        },
+        "rating": {
+          "type": "string",
+          "description": "评价",
+          "enum": [
+            "good",
+            "bad"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "description": "说明"
+        }
+      },
+      "required": [
+        "id",
+        "messageIndex",
+        "rating"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "settings.get",
+    "title": "个人显示设置",
+    "description": "个人显示设置",
+    "group": "settings",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "settings.update",
+    "title": "更新显示设置",
+    "description": "更新显示设置",
+    "group": "settings",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": "number",
+          "description": "当前设置版本"
+        },
+        "language": {
+          "type": "string",
+          "description": "语言",
+          "enum": [
+            "zh",
+            "en",
+            "zh-TW"
+          ]
+        },
+        "timezone": {
+          "type": "string",
+          "description": "IANA时区"
+        }
+      },
+      "required": [
+        "language",
+        "timezone"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "audit.list",
+    "title": "本地操作审计",
+    "description": "本地操作审计",
+    "group": "settings",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "research.technicals",
+    "title": "技术指标 SMA/EMA/RSI/MACD",
+    "description": "技术指标 SMA/EMA/RSI/MACD",
+    "group": "research",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "证券代码"
+        },
+        "series": {
+          "type": "array",
+          "description": "按时间严格升序的date/close",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "asOf": {
+          "type": "string",
+          "description": "带时区的截至ISO时间"
+        },
+        "priceBasis": {
+          "type": "string",
+          "description": "复权口径",
+          "enum": [
+            "UNADJUSTED_CLOSE",
+            "SPLIT_ADJUSTED_CLOSE",
+            "ADJUSTED_TOTAL_RETURN"
+          ]
+        },
+        "smaPeriods": {
+          "type": "array",
+          "description": "SMA周期",
+          "items": {
+            "type": "number",
+            "description": "周期"
+          }
+        },
+        "emaPeriods": {
+          "type": "array",
+          "description": "EMA周期",
+          "items": {
+            "type": "number",
+            "description": "周期"
+          }
+        },
+        "rsiPeriod": {
+          "type": "number",
+          "description": "RSI周期"
+        },
+        "macd": {
+          "type": "object",
+          "description": "fast/slow/signal周期",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "series",
+        "asOf",
+        "priceBasis"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "TEST",
+      "series": [
+        {
+          "date": "2026-11-16",
+          "close": 100
+        },
+        {
+          "date": "2026-11-17",
+          "close": 102
+        },
+        {
+          "date": "2026-11-18",
+          "close": 101
+        },
+        {
+          "date": "2026-11-19",
+          "close": 104
+        }
+      ],
+      "asOf": "2026-11-20T00:00:00Z",
+      "priceBasis": "UNADJUSTED_CLOSE",
+      "smaPeriods": [
+        2
+      ],
+      "emaPeriods": [
+        2
+      ],
+      "rsiPeriod": 2,
+      "macd": {
+        "fast": 2,
+        "slow": 3,
+        "signal": 2
+      }
+    }
+  },
+  {
+    "operation": "research.events",
+    "title": "宏观、行业与公司事件卡",
+    "description": "宏观、行业与公司事件卡",
+    "group": "research",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "array",
+          "description": "含title/source/publishedAt等字段",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "asOf": {
+          "type": "string",
+          "description": "截至时间"
+        },
+        "limit": {
+          "type": "number",
+          "description": "卡片数量"
+        }
+      },
+      "required": [
+        "articles",
+        "asOf"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "articles": [
+        {
+          "id": "example",
+          "title": "Federal Reserve inflation outlook",
+          "source": "synthetic-example",
+          "publishedAt": "2026-11-20T10:00:00Z"
+        }
+      ],
+      "asOf": "2026-11-21T00:00:00Z",
+      "limit": 30
+    }
+  },
+  {
+    "operation": "research.stock",
+    "title": "个股研究总览",
+    "description": "个股研究总览",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "股票代码"
+        },
+        "from": {
+          "type": "string",
+          "description": "历史开始日期"
+        },
+        "to": {
+          "type": "string",
+          "description": "历史结束日期"
+        }
+      },
+      "required": [
+        "symbol",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "symbol": "AAPL",
+      "from": "2026-01-01",
+      "to": "2026-11-20"
+    }
+  },
+  {
+    "operation": "portfolio.rebalancePlan",
+    "title": "生成组合再平衡计划",
+    "description": "生成组合再平衡计划",
+    "group": "portfolios",
+    "kind": "compute",
+    "scope": "compute",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "币种"
+        },
+        "cash": {
+          "type": "string",
+          "description": "可用现金金额"
+        },
+        "positions": {
+          "type": "array",
+          "description": "symbol/quantity/price，零持仓候选也需价格",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "targetWeights": {
+          "type": "object",
+          "description": "目标权重，剩余为现金",
+          "additionalProperties": true
+        },
+        "estimatedFeePerOrder": {
+          "type": "string",
+          "description": "每笔预计费用"
+        },
+        "minimumTradeValue": {
+          "type": "string",
+          "description": "最小交易额"
+        }
+      },
+      "required": [
+        "currency",
+        "cash",
+        "positions",
+        "targetWeights",
+        "estimatedFeePerOrder",
+        "minimumTradeValue"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "currency": "USD",
+      "cash": "1000.00",
+      "positions": [
+        {
+          "symbol": "A",
+          "quantity": 10,
+          "price": "100.00"
+        },
+        {
+          "symbol": "B",
+          "quantity": 0,
+          "price": "50.00"
+        }
+      ],
+      "targetWeights": {
+        "A": 0.5,
+        "B": 0.5
+      },
+      "estimatedFeePerOrder": "1.00",
+      "minimumTradeValue": "0.00"
+    }
+  },
+  {
+    "operation": "predict.compare",
+    "title": "预测市场价阶与概率差比较",
+    "description": "预测市场价阶与概率差比较",
+    "group": "predict",
+    "kind": "compute",
+    "scope": "predict",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "markets": {
+          "type": "array",
+          "description": "明确规则、时间、单位、深度、费用和主观概率的市场",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "quantity": {
+          "type": "number",
+          "description": "比较数量"
+        },
+        "asOf": {
+          "type": "string",
+          "description": "比较时间"
+        },
+        "maxAgeMs": {
+          "type": "number",
+          "description": "最大数据年龄"
+        }
+      },
+      "required": [
+        "markets",
+        "quantity",
+        "asOf",
+        "maxAgeMs"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "conditions.create",
+    "title": "创建本地止损/止盈/OCO规则",
+    "description": "创建本地止损/止盈/OCO规则",
+    "group": "orders",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "规则名"
+        },
+        "kind": {
+          "type": "string",
+          "description": "类型",
+          "enum": [
+            "SINGLE",
+            "OCO"
+          ]
+        },
+        "maxAgeMs": {
+          "type": "number",
+          "description": "行情最大年龄"
+        },
+        "expiresAt": {
+          "type": "string",
+          "description": "规则截止ISO时间"
+        },
+        "legs": {
+          "type": "array",
+          "description": "type STOP_LIMIT/TAKE_PROFIT_LIMIT、triggerPrice及完整order",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "name",
+        "kind",
+        "maxAgeMs",
+        "expiresAt",
+        "legs"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "name": "合成条件演练",
+      "kind": "SINGLE",
+      "maxAgeMs": 300000,
+      "expiresAt": "2027-01-01T00:00:00Z",
+      "legs": [
+        {
+          "type": "STOP_LIMIT",
+          "triggerPrice": "100.00",
+          "order": {
+            "symbol": "AAPL",
+            "assetClass": "STOCK",
+            "side": "BUY",
+            "positionEffect": "OPEN",
+            "quantity": 1,
+            "type": "LIMIT",
+            "limitPrice": "100.00",
+            "currency": "USD",
+            "timeInForce": "GTC",
+            "session": "REGULAR",
+            "estimatedFees": "0.00"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "operation": "conditions.list",
+    "title": "本地条件规则",
+    "description": "本地条件规则",
+    "group": "orders",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "number",
+          "description": "数量"
+        },
+        "offset": {
+          "type": "number",
+          "description": "偏移"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "conditions.get",
+    "title": "读取条件规则",
+    "description": "读取条件规则",
+    "group": "orders",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "conditions.evaluate",
+    "title": "用明确行情检查条件",
+    "description": "用明确行情检查条件",
+    "group": "orders",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        },
+        "eventId": {
+          "type": "string",
+          "description": "唯一检查事件ID"
+        },
+        "quote": {
+          "type": "object",
+          "description": "symbol/price/asOf/source/synthetic/assetClass/currency:USD/priceUnit（STOCK为USD_PER_SHARE，OPTION为USD_PER_UNDERLYING_UNIT并需完整contract）",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "eventId",
+        "quote"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "conditions.cancel",
+    "title": "取消条件规则",
+    "description": "取消条件规则",
+    "group": "orders",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "conditions.previewTriggered",
+    "title": "重新预览已触发草稿",
+    "description": "重新预览已触发草稿",
+    "group": "orders",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "order.replaceDraft",
+    "title": "修改并替换未确认草稿",
+    "description": "修改并替换未确认草稿",
+    "group": "orders",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        },
+        "patch": {
+          "type": "object",
+          "description": "需要修改的订单字段",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "patch"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.search",
+    "title": "全文搜索Pi会话",
+    "description": "全文搜索Pi会话",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "标题或消息正文关键词"
+        },
+        "includeArchived": {
+          "type": "boolean",
+          "description": "含归档"
+        },
+        "includeDeleted": {
+          "type": "boolean",
+          "description": "含回收站"
+        },
+        "limit": {
+          "type": "number",
+          "description": "每页最多1000"
+        },
+        "offset": {
+          "type": "number",
+          "description": "分页偏移"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {
+      "query": "",
+      "limit": 50,
+      "offset": 0
+    }
+  },
+  {
+    "operation": "chat.trash",
+    "title": "移入会话回收站",
+    "description": "移入会话回收站",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.restore",
+    "title": "从会话回收站恢复",
+    "description": "从会话回收站恢复",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.fork",
+    "title": "编辑问题并建立Pi分支",
+    "description": "编辑问题并建立Pi分支",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        },
+        "messageIndex": {
+          "type": "number",
+          "description": "用户消息在UI messages中的下标"
+        },
+        "replacement": {
+          "type": "string",
+          "description": "修改后的问题"
+        },
+        "title": {
+          "type": "string",
+          "description": "新分支标题"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "messageIndex",
+        "replacement"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.native",
+    "title": "查看Pi原生会话信息",
+    "description": "查看Pi原生会话信息",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "chat.exportNative",
+    "title": "导出Pi原生JSONL记录",
+    "description": "导出Pi原生JSONL记录",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "files",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "share.create",
+    "title": "创建本机只读分享快照",
+    "description": "创建本机只读分享快照",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sourceType": {
+          "type": "string",
+          "description": "来源",
+          "enum": [
+            "chat",
+            "file"
+          ]
+        },
+        "sourceId": {
+          "type": "string",
+          "description": "会话或文本文件ID"
+        },
+        "expiresInHours": {
+          "type": "number",
+          "description": "1到168小时",
+          "minimum": 1,
+          "maximum": 168
+        }
+      },
+      "required": [
+        "sourceType",
+        "sourceId",
+        "expiresInHours"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "share.list",
+    "title": "本机分享记录",
+    "description": "本机分享记录",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "share.revoke",
+    "title": "撤销分享链接",
+    "description": "撤销分享链接",
+    "group": "conversations",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "briefs.create",
+    "title": "设置周期性研究简报",
+    "description": "设置周期性研究简报",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "market",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "简报名"
+        },
+        "symbols": {
+          "type": "array",
+          "description": "标的",
+          "items": {
+            "type": "string",
+            "description": "代码"
+          }
+        },
+        "intervalMs": {
+          "type": "number",
+          "description": "周期毫秒，日更为86400000"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "启用"
+        }
+      },
+      "required": [
+        "name",
+        "symbols",
+        "intervalMs",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "name": "每日观察",
+      "symbols": [
+        "AAPL",
+        "MSFT"
+      ],
+      "intervalMs": 86400000,
+      "enabled": true
+    }
+  },
+  {
+    "operation": "briefs.list",
+    "title": "研究简报任务",
+    "description": "研究简报任务",
+    "group": "alerts",
+    "kind": "read",
+    "scope": "portfolio",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "briefs.update",
+    "title": "启停研究简报",
+    "description": "启停研究简报",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本",
+          "minimum": 1
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "启用"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "briefs.run",
+    "title": "立即生成简报与本地通知",
+    "description": "立即生成简报与本地通知",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "market",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "profile.get",
+    "title": "本地个人资料",
+    "description": "本地个人资料",
+    "group": "settings",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "profile.update",
+    "title": "修改本地个人资料",
+    "description": "修改本地个人资料",
+    "group": "settings",
+    "kind": "human",
+    "scope": "portfolio",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": "number",
+          "description": "当前版本，初次为0",
+          "minimum": 0
+        },
+        "displayName": {
+          "type": "string",
+          "description": "显示名"
+        },
+        "bio": {
+          "type": "string",
+          "description": "简介"
+        }
+      },
+      "required": [
+        "revision",
+        "displayName"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.intent",
+    "title": "提取或补充对话交易需求（不下单）",
+    "description": "提取或补充对话交易需求（不下单）",
+    "group": "orders",
+    "kind": "write",
+    "scope": "trade",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "交易需求ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "最新版本"
+        },
+        "fields": {
+          "type": "object",
+          "properties": {
+            "accountId": {
+              "type": "string",
+              "description": "IBKR模拟账户DU编号"
+            },
+            "symbol": {
+              "type": "string",
+              "description": "股票代码；期权填写标的代码"
+            },
+            "assetClass": {
+              "type": "string",
+              "description": "资产",
+              "enum": [
+                "STOCK",
+                "OPTION"
+              ]
+            },
+            "side": {
+              "type": "string",
+              "description": "买卖",
+              "enum": [
+                "BUY",
+                "SELL"
+              ]
+            },
+            "positionEffect": {
+              "type": "string",
+              "description": "开平仓",
+              "enum": [
+                "OPEN",
+                "CLOSE"
+              ]
+            },
+            "quantity": {
+              "type": "number",
+              "description": "整数股数或合约数"
+            },
+            "type": {
+              "type": "string",
+              "description": "本版本支持限价",
+              "enum": [
+                "LIMIT"
+              ]
+            },
+            "limitPrice": {
+              "type": "string",
+              "description": "每股或每份期权限价，十进制字符串"
+            },
+            "currency": {
+              "type": "string",
+              "description": "币种",
+              "enum": [
+                "USD"
+              ]
+            },
+            "timeInForce": {
+              "type": "string",
+              "description": "有效期",
+              "enum": [
+                "DAY",
+                "GTC"
+              ]
+            },
+            "session": {
+              "type": "string",
+              "description": "交易时段",
+              "enum": [
+                "REGULAR"
+              ]
+            },
+            "conid": {
+              "type": "number",
+              "description": "从IBKR查询到的唯一合约ID"
+            },
+            "expiration": {
+              "type": "string",
+              "description": "期权到期日YYYY-MM-DD"
+            },
+            "right": {
+              "type": "string",
+              "description": "期权方向",
+              "enum": [
+                "CALL",
+                "PUT"
+              ]
+            },
+            "strike": {
+              "type": "string",
+              "description": "期权行权价"
+            },
+            "multiplier": {
+              "type": "number",
+              "description": "IBKR核实的合约乘数"
+            }
+          },
+          "additionalProperties": false
+        },
+        "clear": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "清空字段",
+            "enum": [
+              "accountId",
+              "symbol",
+              "assetClass",
+              "side",
+              "positionEffect",
+              "quantity",
+              "type",
+              "limitPrice",
+              "currency",
+              "timeInForce",
+              "session",
+              "conid",
+              "expiration",
+              "right",
+              "strike",
+              "multiplier"
+            ]
+          }
+        }
+      },
+      "required": [
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.list",
+    "title": "交易需求与券商订单列表",
+    "description": "交易需求与券商订单列表",
+    "group": "orders",
+    "kind": "read",
+    "scope": "trade",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chatId": {
+          "type": "string",
+          "description": "仅此会话；省略显示全部"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.get",
+    "title": "读取交易需求和缺失参数",
+    "description": "读取交易需求和缺失参数",
+    "group": "orders",
+    "kind": "read",
+    "scope": "trade",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "交易需求ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.search",
+    "title": "IBKR股票与期权标的搜索",
+    "description": "IBKR股票与期权标的搜索",
+    "group": "orders",
+    "kind": "read",
+    "scope": "trade",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "标的代码"
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.optionContracts",
+    "title": "IBKR期权行权价或精确合约查询",
+    "description": "IBKR期权行权价或精确合约查询",
+    "group": "orders",
+    "kind": "read",
+    "scope": "trade",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "标的代码"
+        },
+        "underlyingConid": {
+          "type": "number",
+          "description": "search返回的标的ID"
+        },
+        "month": {
+          "type": "string",
+          "description": "search返回月份，例如DEC26"
+        },
+        "right": {
+          "type": "string",
+          "description": "方向",
+          "enum": [
+            "CALL",
+            "PUT"
+          ]
+        },
+        "strike": {
+          "type": "string",
+          "description": "不填查询行权价，填写查询该行权价合约"
+        }
+      },
+      "required": [
+        "symbol",
+        "underlyingConid",
+        "month"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.prepare",
+    "title": "校验需求并取得IBKR模拟订单预览（不提交）",
+    "description": "校验需求并取得IBKR模拟订单预览（不提交）",
+    "group": "orders",
+    "kind": "write",
+    "scope": "trade",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "交易需求ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "最新版本"
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.refresh",
+    "title": "从IBKR查询订单回执与成交状态",
+    "description": "从IBKR查询订单回执与成交状态",
+    "group": "orders",
+    "kind": "read",
+    "scope": "trade",
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "交易需求ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.review",
+    "title": "人工核对订单或券商警告，签发短期确认凭证",
+    "description": "人工核对订单或券商警告，签发短期确认凭证",
+    "group": "orders",
+    "kind": "human",
+    "scope": "trade",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "交易需求ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "最新版本"
+        },
+        "action": {
+          "type": "string",
+          "description": "确认动作",
+          "enum": [
+            "SUBMIT",
+            "REPLY",
+            "CANCEL",
+            "DECLINE"
+          ]
+        },
+        "wheelEvidence": {
+          "type": "object",
+          "description": "卖出开仓期权需人工填写已核对的Wheel分析输入",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.confirm",
+    "title": "人工提交已核对的IBKR模拟订单动作",
+    "description": "人工提交已核对的IBKR模拟订单动作",
+    "group": "orders",
+    "kind": "human",
+    "scope": "trade",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "交易需求ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "最新版本"
+        },
+        "confirmationToken": {
+          "type": "string",
+          "description": "人工核对返回的凭证"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "confirmationToken"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "trade.discard",
+    "title": "放弃未提交的交易需求",
+    "description": "放弃未提交的交易需求",
+    "group": "orders",
+    "kind": "human",
+    "scope": "trade",
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "交易需求ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "最新版本"
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  }
+]

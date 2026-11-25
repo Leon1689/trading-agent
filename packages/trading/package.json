@@ -1,0 +1,48 @@
+{
+  "name": "@local/trading-workbench",
+  "version": "3.3.0",
+  "description": "Trading research, options calculations, and human-confirmed IBKR paper execution",
+  "type": "module",
+  "exports": {
+    ".": "./integration.js",
+    "./host": "./integration.js",
+    "./agent": "./agent.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "*.js",
+    "cordis.patch.yml",
+    "README.md",
+    "quant.md"
+  ],
+  "dependencies": {
+    "@earendil-works/pi-agent-core": "1.6.0",
+    "@earendil-works/pi-ai": "1.6.0"
+  },
+  "peerDependencies": {
+    "@local/options-ledger-dashboard": ">=1.2.3 <2"
+  },
+  "peerDependenciesMeta": {
+    "@local/options-ledger-dashboard": {
+      "optional": true
+    }
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "license": "MIT"
+}
