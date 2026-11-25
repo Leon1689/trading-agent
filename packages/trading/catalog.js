@@ -70,7 +70,7 @@ export const catalog = [
   op('chat.list', '搜索会话', 'conversations', 'read', 'portfolio', { query: str('标题关键词'), includeArchived: { type: 'boolean' } }),
   op('chat.get', '读取会话', 'conversations', 'read', 'portfolio', id, ['id']),
   op('chat.update', '改名、置顶或归档', 'conversations', 'human', 'portfolio', { ...rev, title: str('新标题'), pinned: { type: 'boolean' }, archived: { type: 'boolean' } }, ['id']),
-  op('chat.send', '向Pi研究助手提问', 'conversations', 'human', 'market', { ...id, message: str('问题'), allowedScopes: arr('本轮允许的数据范围', str('范围', { enum: ['market', 'compute', 'predict', 'portfolio', 'files', 'ledger', 'broker', 'localRead', 'localWrite', 'shell', 'resources', 'trade'] })), attachments: arr('本轮图片附件') }, ['id', 'message']),
+  op('chat.send', '向交易助手提问', 'conversations', 'human', 'market', { ...id, message: str('问题'), allowedScopes: arr('本轮允许的数据范围', str('范围', { enum: ['market', 'compute', 'predict', 'portfolio', 'files', 'ledger', 'broker', 'localRead', 'localWrite', 'shell', 'resources', 'trade'] })), attachments: arr('本轮图片附件') }, ['id', 'message']),
   op('chat.export', '导出会话Markdown', 'conversations', 'human', 'files', id, ['id']),
   op('chat.recover', '恢复超时中断的会话', 'conversations', 'human', 'portfolio', rev, ['id', 'revision']),
   op('chat.feedback', '记录回答反馈', 'conversations', 'human', 'portfolio', { ...id, messageIndex: num('消息序号'), rating: str('评价', { enum: ['good', 'bad'] }), note: str('说明') }, ['id', 'messageIndex', 'rating']),

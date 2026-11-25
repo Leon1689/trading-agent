@@ -1,13 +1,15 @@
 # Architecture
 
-Pi Trading Agent is a local application built around the official Pi 1.6.0 runtime. The application supplies trading tools, persistence, provider adapters, and permission boundaries; Pi owns the agent loop and native conversation format.
+trading agent is a local application for research, options analysis, strategy accounting, and human-confirmed paper orders. Its application layer separates the conversation runtime, deterministic business tools, data providers, and execution permissions.
+
+The runtime adapter uses Pi Coding Agent 1.6.0 for the agent loop and native conversation format; integration details and third-party attribution are recorded in [technical design](technical-design.md) and [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 ## Runtime boundaries
 
 ```mermaid
 flowchart TD
-    Web[Web and trading CLI] --> Session[Pi AgentSession and ModelRuntime]
-    Native[Official Pi CLI: TUI / print / JSON / RPC] --> NS[Isolated native Pi session]
+    Web[Web and trading CLI] --> Session[Conversation runtime and model tools]
+    Native[Terminal: TUI / print / JSON / RPC] --> NS[Isolated terminal session]
     NS --> Bridge[IPC tool bridge]
     NS --> Resources[Native resources and model authentication]
     Session <--> JSONL[SessionManager JSONL]
@@ -35,9 +37,9 @@ The model can prepare a trade and read its status. Human-only confirmation endpo
 
 | Path | Responsibility |
 |---|---|
-| `apps/pi-trader/runtime.js` | Construct the standalone application, data directories, ledger, Pi runner, and service. |
-| `apps/pi-trader/server.js` | Authenticated loopback HTTP API and static UI. |
-| `apps/pi-trader/web/` | Research views, conversations, ledger forms, and broker confirmation cards. |
+| `apps/trading-agent/runtime.js` | Construct the standalone application, data directories, ledger, Pi runner, and service. |
+| `apps/trading-agent/server.js` | Authenticated loopback HTTP API and static UI. |
+| `apps/trading-agent/web/` | Research views, conversations, ledger forms, and broker confirmation cards. |
 | `packages/trading/pi-session-runtime.js` | Official AgentSession integration, events, budgets, cancellation, history, and settings. |
 | `packages/trading/pi-native-*.js` | Native settings, isolated CLI launch, and IPC bridge. |
 | `packages/trading/computer-*.js` | Official file/Shell tools with separate grants and process isolation. |

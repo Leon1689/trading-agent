@@ -8,7 +8,7 @@ The primary runtime uses `@earendil-works/pi-coding-agent` version 1.6.0, with t
 - Copyright: Copyright (c) 2025 Mario Zechner
 - License: MIT; the upstream notice is preserved in [licenses/pi-MIT.txt](licenses/pi-MIT.txt).
 
-Pi Trading Agent adds application services, a strategy ledger, provider adapters, and an execution-confirmation workflow. It does not replace or claim authorship of the Pi runtime.
+trading agent adds application services, a strategy ledger, provider adapters, and an execution-confirmation workflow. It does not replace or claim authorship of the Pi runtime.
 
 ## Other dependencies
 

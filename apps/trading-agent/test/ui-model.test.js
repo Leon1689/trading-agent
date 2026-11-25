@@ -52,7 +52,7 @@ test('source links reject executable schemes and saved text downloads preserve e
 });
 
 test('standalone navigation and permission guidance have explicit Traditional and English copy',()=>{
- assert.equal(translate('options','zh-TW'),'期權與規則');assert.equal(translate('conversations','en'),'Pi conversations');assert.notEqual(translate('historyScope','zh-TW'),translate('historyScope','zh'));assert.ok(translate('shareHelp','en').includes('local-only'));
+ assert.equal(translate('options','zh-TW'),'期權與規則');assert.equal(translate('conversations','en'),'Trading conversations');assert.notEqual(translate('historyScope','zh-TW'),translate('historyScope','zh'));assert.ok(translate('shareHelp','en').includes('local-only'));
 });
 
 

@@ -61,7 +61,7 @@
 | chat.list | 搜索会话 | read | portfolio | 否 |
 | chat.get | 读取会话 | read | portfolio | 否 |
 | chat.update | 改名、置顶或归档 | human | portfolio | 否 |
-| chat.send | 向Pi研究助手提问 | human | market | 否 |
+| chat.send | 向交易助手提问 | human | market | 否 |
 | chat.export | 导出会话Markdown | human | files | 否 |
 | chat.recover | 恢复超时中断的会话 | human | portfolio | 否 |
 | chat.feedback | 记录回答反馈 | human | portfolio | 否 |

@@ -1,4 +1,4 @@
-# 部署与迁移到 Pi Trading Agent v3
+# 部署与迁移到 trading agent v3
 
 v3默认运行于官方Pi SDK，`npm start`直接启动独立应用，不需要安装或运行Harness。旧领域逻辑和插件适配器保留，用户数据不会因安装源码自动迁移。默认券商READ_ONLY，模型、供应商及后台轮询默认未启用。
 
@@ -8,7 +8,7 @@ v3默认运行于官方Pi SDK，`npm start`直接启动独立应用，不需要�
 
 ```sh
 npm ci --ignore-scripts
-node apps/pi-trader/cli.js init --home /absolute/path/pi-trader-data
+node apps/trading-agent/cli.js init --home /absolute/path/pi-trader-data
 npm run doctor -- --home /absolute/path/pi-trader-data
 npm start -- --home /absolute/path/pi-trader-data --port 3100
 ```
@@ -31,8 +31,8 @@ npm start -- --home /absolute/path/pi-trader-data --port 3100
 建议先结束原应用中的会话和写操作并停止原实例，以取得两库之间一致的业务时点，再执行：
 
 ```sh
-node apps/pi-trader/cli.js migrate --from-harness /absolute/path/old-dsh-home --home /absolute/path/new-pi-trader-data
-node apps/pi-trader/cli.js init --home /absolute/path/new-pi-trader-data
+node apps/trading-agent/cli.js migrate --from-harness /absolute/path/old-dsh-home --home /absolute/path/new-pi-trader-data
+node apps/trading-agent/cli.js init --home /absolute/path/new-pi-trader-data
 npm start -- --home /absolute/path/new-pi-trader-data --port 3100
 ```
 

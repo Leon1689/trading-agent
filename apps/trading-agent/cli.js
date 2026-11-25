@@ -19,7 +19,7 @@ const home=resolve(options['--home']??process.env.PI_TRADER_HOME??'.pi-trader');
 const config=options['--paper']?{execution:{mode:'LOCAL_PAPER'}}:undefined;
  if(command==='serve'){
   const app=await startServer({home,config,port:Number(options['--port']??3100)});
-  console.log(`Pi Trading Agent ${FRAMEWORK.applicationVersion} · Pi SDK ${FRAMEWORK.version}\nLocal data: ${home}\nBroker: ${app.runtime.service.capabilities().brokerAccess} · Execution: ${app.runtime.config.execution.mode}\nOpen: ${app.url}`);
+  console.log(`trading agent ${FRAMEWORK.applicationVersion}\nLocal data: ${home}\nBroker: ${app.runtime.service.capabilities().brokerAccess} · Execution: ${app.runtime.config.execution.mode}\nOpen: ${app.url}`);
   const stop=async()=>{await app.close();process.exitCode=0;};process.once('SIGINT',stop);process.once('SIGTERM',stop);
  }else if(command==='native'){
   const runtime=await createStandaloneRuntime({home});

@@ -407,7 +407,7 @@ export const locales = {
       "chat.list": "搜索会话",
       "chat.get": "读取会话",
       "chat.update": "改名、置顶或归档",
-      "chat.send": "向Pi研究助手提问",
+      "chat.send": "向交易助手提问",
       "chat.export": "导出会话Markdown",
       "chat.feedback": "记录回答反馈",
       "settings.get": "个人显示设置",

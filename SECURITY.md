@@ -16,6 +16,6 @@ The broker snapshot is not atomic across endpoints. Other clients may change pos
 
 ## Reporting a vulnerability
 
-Use the repository's private vulnerability reporting page: https://github.com/Leon1689/pi-trading-agent/security/advisories/new
+Use the repository's private vulnerability reporting page: https://github.com/Leon1689/trading-agent/security/advisories/new
 
 Do not post credentials, account details, private transcripts, or reproducible trading instructions involving a real account in a public issue. Include the affected version, a synthetic reproduction, and the expected permission boundary.

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Rename the application and public repository to trading agent.
+- Update product copy, app icon and documentation; preserve runtime dependencies and existing data/API identifiers.
+
 ## 3.3.0
 
 - Added conversational trade intents, missing-field checks, contract lookup, and frozen IBKR what-if previews.

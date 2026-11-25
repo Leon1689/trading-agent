@@ -1,6 +1,6 @@
 import{pathToFileURL}from'node:url';
 import test from 'node:test';import assert from 'node:assert/strict';import{mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync}from'node:fs';import{tmpdir}from'node:os';import{join}from'node:path';
-import{createStandaloneRuntime}from'../../../apps/pi-trader/runtime.js';import{launchNative,prepareNativeLaunch}from'../pi-native-launcher.js';import{resolvePiNative,PI_SETTINGS_SCHEMA,PI_PACKAGE_ROOT}from'../pi-native-config.js';
+import{createStandaloneRuntime}from'../../../apps/trading-agent/runtime.js';import{launchNative,prepareNativeLaunch}from'../pi-native-launcher.js';import{resolvePiNative,PI_SETTINGS_SCHEMA,PI_PACKAGE_ROOT}from'../pi-native-config.js';
 async function fixture(t){const base=mkdtempSync(join(tmpdir(),'pi-native-entry-')),home=join(base,'data');const runtime=await createStandaloneRuntime({home});t.after(async()=>{await runtime.close();rmSync(base,{recursive:true,force:true});});return{base,home,runtime};}
 const scopes=['compute','resources','localRead','localWrite','shell'];
 async function capture(runtime,args,{env,onData,input}={}){let output='',errors='';const result=await launchNative({runtime,args,scopes,stdio:'pipe',env,onChild:child=>{if(input)child.stdin.write(input);else if(!args.includes('rpc'))child.stdin.end();const timer=setTimeout(()=>{try{process.kill(-child.pid,'SIGKILL');}catch{}},30000);child.once('close',()=>clearTimeout(timer));child.stdout.on('data',b=>{output+=b;onData?.(child,output);});child.stderr.on('data',b=>{errors+=b;});}});return{...result,output,errors};}

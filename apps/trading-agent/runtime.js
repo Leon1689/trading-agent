@@ -15,7 +15,7 @@ export function loadApplicationConfig(home, overrides = {}) {
   const path = join(home, 'config.json');
   if (existsSync(path)) {
     try { input = JSON.parse(readFileSync(path, 'utf8')); }
-    catch (error) { throw new TradingError('INVALID_CONFIG', 'Pi交易Agent配置JSON无效。', 500); }
+    catch (error) { throw new TradingError('INVALID_CONFIG', 'trading agent配置JSON无效。', 500); }
   }
   return resolveConfig({ ...input, ...overrides, pi: { ...input.pi, ...overrides.pi }, execution: { ...input.execution, ...overrides.execution } });
 }

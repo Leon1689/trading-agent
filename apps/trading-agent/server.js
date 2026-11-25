@@ -45,10 +45,10 @@ export async function startServer({ home, config, port=3100, runtime: suppliedRu
         }
         if(url.pathname.startsWith('/share/')&&req.method==='GET'){
           const value=runtime.service.readShare(url.pathname.slice(7));
-          send(res,200,`<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${htmlEscape(value.title)}</title><body><h1>${htmlEscape(value.title)}</h1><p>Pi交易Agent · 本机分享快照 · ${htmlEscape(value.expiresAt)}</p><pre style="white-space:pre-wrap">${htmlEscape(value.content)}</pre></body></html>`,{'content-type':'text/html; charset=utf-8','content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'"});return;
+          send(res,200,`<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${htmlEscape(value.title)}</title><body><h1>${htmlEscape(value.title)}</h1><p>trading agent · 本机分享快照 · ${htmlEscape(value.expiresAt)}</p><pre style="white-space:pre-wrap">${htmlEscape(value.content)}</pre></body></html>`,{'content-type':'text/html; charset=utf-8','content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'"});return;
         }
         const cookie=(req.headers.cookie??'').split(';').map(s=>s.trim()).find(s=>s.startsWith('pi_trader_session='))?.slice(18);
-        if(!equal(cookie,browserSession)||Date.now()>=authenticatedUntil)throw new TradingError('AUTH_REQUIRED','请使用Pi交易Agent启动时显示的本机认证链接。',401);
+        if(!equal(cookie,browserSession)||Date.now()>=authenticatedUntil)throw new TradingError('AUTH_REQUIRED','请使用trading agent启动时显示的本机认证链接。',401);
         if(req.method==='POST'){
           if(req.headers['x-pi-trader']!=='1'||!String(req.headers['content-type']).startsWith('application/json'))throw new TradingError('REQUEST_DENIED','请求需要JSON和应用校验头。',403);
         }

@@ -1,8 +1,8 @@
-# Pi Trading Agent
+# trading agent
 
 [简体中文](README.md) · [Architecture](docs/architecture.md) · [API catalog](docs/api-catalog.md)
 
-A local options research and paper-trading workbench built on [Pi Coding Agent](https://github.com/earendil-works/pi). It combines deterministic options calculations, a strategy ledger, market research, and human-confirmed IBKR paper orders.
+An independent trading research application designed and maintained by Leon1689. It combines deterministic options calculations, a strategy ledger, market research, and human-confirmed IBKR paper orders.
 
 The model collects requirements, calls tools, and explains results. Code calculates Greeks and enforces strategy constraints. Only the authenticated user can confirm a broker action.
 
@@ -12,7 +12,7 @@ The model collects requirements, calls tools, and explains results. Code calcula
 - A SQLite strategy ledger with integer-cent accounting and per-symbol option cash flows.
 - Financial research, technical indicators, portfolio backtests, prediction-market comparisons, reports, and local alerts.
 - Conversational order preparation: missing-field questions, contract lookup, what-if preview, human review, broker warning handling, and status reconciliation.
-- Pi's original file and shell tools, resource discovery, compaction, retry, session trees, and an isolated native CLI for TUI, RPC, extensions, and MCP.
+- File and shell tools, resource discovery, compaction, retry, session trees, and an isolated native CLI for TUI, RPC, extensions, and MCP.
 
 ## Run locally
 
@@ -21,11 +21,11 @@ The full application is tested on **macOS with Node.js 26**. File, shell, and na
 For native `grep` / `find` and the full test suite, install the search executables with `brew install ripgrep fd`. Sandboxed tools cannot download dependencies. The default four file/Shell tools do not need these executables.
 
 ```sh
-git clone https://github.com/Leon1689/pi-trading-agent.git
-cd pi-trading-agent
+git clone https://github.com/Leon1689/trading-agent.git
+cd trading-agent
 npm ci --ignore-scripts
-node apps/pi-trader/cli.js init --home "$HOME/.local/share/pi-trader"
-npm start -- --home "$HOME/.local/share/pi-trader" --port 3100
+node apps/trading-agent/cli.js init --home "$HOME/.local/share/trading-agent"
+npm start -- --home "$HOME/.local/share/trading-agent" --port 3100
 ```
 
 Open the local authentication URL printed by the server. The default configuration leaves models and data providers disabled; local calculations and the ledger remain available.
@@ -44,7 +44,7 @@ The release contains the IBKR paper protocol adapter, verified against controlle
 
 ## Project layout
 
-`apps/pi-trader` hosts the standalone app. `packages/trading` contains domain tools and Pi adapters; `packages/ledger` owns the ledger. `packages/preset` retains legacy Harness compatibility and is not required by the main application. Documentation, credential-free examples, and CI live in `docs`, `examples`, and `.github`.
+`apps/trading-agent` hosts the standalone app. `packages/trading` contains domain tools and runtime adapters; `packages/ledger` owns the ledger. `packages/preset` retains legacy Harness compatibility and is not required by the main application. Documentation, credential-free examples, and CI live in `docs`, `examples`, and `.github`.
 
 ```sh
 npm run check
@@ -56,4 +56,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [ver
 
 ## License
 
-[MIT](LICENSE). Upstream attribution is preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). This is an independent project, not an official Pi, IBKR, or RockFlow product.
+[MIT](LICENSE). Upstream attribution is preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

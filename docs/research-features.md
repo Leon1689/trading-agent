@@ -1,6 +1,6 @@
 # 本地研究与条件预览契约
 
-此页描述Pi交易Agent的独立领域模块：`research-features.js`与`conditional-paper.js`。二者不访问网络，不读取密钥，也不提交券商订单。所有明确输入都属于用户给出的情景；服务层负责工具权限、操作目录和审计。
+此页描述trading agent的独立领域模块：`research-features.js`与`conditional-paper.js`。二者不访问网络，不读取密钥，也不提交券商订单。所有明确输入都属于用户给出的情景；服务层负责工具权限、操作目录和审计。
 
 ## 技术指标
 

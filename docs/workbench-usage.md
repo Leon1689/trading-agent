@@ -5,8 +5,8 @@
 Use Node.js 26 on macOS. Run `npm ci --ignore-scripts`, initialize a data directory, then start the application:
 
 ```sh
-node apps/pi-trader/cli.js init --home "$HOME/.local/share/pi-trader"
-npm start -- --home "$HOME/.local/share/pi-trader" --port 3100
+node apps/trading-agent/cli.js init --home "$HOME/.local/share/trading-agent"
+npm start -- --home "$HOME/.local/share/trading-agent" --port 3100
 ```
 
 The server prints a local authentication link. Configuration is loaded from that data directory's `config.json`; restart after changing it. Initialization will not overwrite an existing file.
@@ -34,8 +34,8 @@ Review the confirmation card and broker warnings before clicking the final butto
 ## Native Pi entry
 
 ```sh
-npm run native -- --home "$HOME/.local/share/pi-trader" --scopes compute,resources --
-npm run native -- --home "$HOME/.local/share/pi-trader" --scopes compute,resources -- --mode rpc
+npm run native -- --home "$HOME/.local/share/trading-agent" --scopes compute,resources --
+npm run native -- --home "$HOME/.local/share/trading-agent" --scopes compute,resources -- --mode rpc
 ```
 
 Add localRead/localWrite/shell only when needed. Native file paths and network destinations are controlled by configuration. See [native capabilities](pi-native-capabilities.md).

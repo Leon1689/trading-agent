@@ -2252,8 +2252,8 @@
   },
   {
     "operation": "chat.send",
-    "title": "向Pi研究助手提问",
-    "description": "向Pi研究助手提问",
+    "title": "向交易助手提问",
+    "description": "向交易助手提问",
     "group": "conversations",
     "kind": "human",
     "scope": "market",

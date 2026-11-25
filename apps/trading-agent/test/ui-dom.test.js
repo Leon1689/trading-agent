@@ -46,8 +46,8 @@ async function mount(t,{model=false,images=false,config:overrides={},gateway}={}
 }
 
 test('standalone navigation, quant calculation and readonly preview operate against the actual service',async t=>{
- const ui=await mount(t);assert.match(ui.app.textContent,/Pi Agent SDK/);assert.match(ui.app.textContent,/101/);assert.equal(ui.requests.length,0);
- for(const name of ['◉市场研究','Δ期权与规则','◫组合与回测','◇预测市场','⇄模拟订单','◷提醒与简报','▤资料与报告','πPi 对话','▦期权账本','⚙能力与设置'])await ui.click('button',name);
+ const ui=await mount(t);assert.match(ui.app.textContent,/trading agent/);assert.match(ui.app.textContent,/101/);assert.equal(ui.requests.length,0);
+ for(const name of ['◉市场研究','Δ期权与规则','◫组合与回测','◇预测市场','⇄模拟订单','◷提醒与简报','▤资料与报告','◌交易对话','▦期权账本','⚙能力与设置'])await ui.click('button',name);
  assert.equal(ui.errors.length,0);assert.equal(ui.requests.some(c=>c.operation?.startsWith('broker.')),false);
  await ui.click('button','Δ期权与规则');const operation=ui.input('选择操作');operation.value='quant.price';await operation.event('change');const controlText=ui.app.querySelector('.workspace-grid').children[0].textContent;assert.doesNotMatch(controlText,/false|null|undefined/);await ui.click('button','运行');assert.match(ui.app.textContent,/2\.49337682/);
  await ui.click('button','⇄模拟订单');await ui.click('button','预览');assert.match(ui.app.textContent,/当前只读，不能确认订单/);assert.equal(ui.requests.some(c=>c.operation==='order.confirm'),false);
@@ -58,20 +58,20 @@ test('standalone ledger persists original cents and refreshes revision after exp
  const ui=await mount(t);await ui.click('button','▦期权账本');await ui.click('button','录入 / 调整持仓');await ui.setField('symbol','AAPL');await ui.setField('shares','100');await ui.setField('nominalCost','10000.01');await ui.click('button','保存');assert.equal(ui.ledger.read().positions.AAPL.nominalCostCents,1000001);assert.equal(ui.ledger.read().revision,1);assert.match(ui.app.textContent,/AAPL/);assert.equal(ui.errors.length,0);
 });
 
-test('standalone Pi chat never auto-enables private history and sends only selected scopes',async t=>{
- const ui=await mount(t,{model:true});await ui.click('button','πPi 对话');await ui.click('button','+');let input=ui.input('输入研究问题');input.value='Fixture question';await input.event('input');await ui.click('button','发送给 Pi');assert.match(ui.app.textContent,/Synthetic fixture answer/);const sent=ui.requests.find(c=>c.operation==='chat.send');assert.deepEqual(sent.args.allowedScopes,['market','compute','predict']);
+test('standalone trading chat never auto-enables private history and sends only selected scopes',async t=>{
+ const ui=await mount(t,{model:true});await ui.click('button','◌交易对话');await ui.click('button','+');let input=ui.input('输入研究问题');input.value='Fixture question';await input.event('input');await ui.click('button','发送');assert.match(ui.app.textContent,/Synthetic fixture answer/);const sent=ui.requests.find(c=>c.operation==='chat.send');assert.deepEqual(sent.args.allowedScopes,['market','compute','predict']);
  const record=ui.service.store.require('chat',sent.args.id);ui.service.store.put('chat',record.id,{...record,historyScopes:['files']},record.revision);
- await ui.click('button','⌂总览');await ui.click('button','πPi 对话');input=ui.input('输入研究问题');input.value='Continue';await input.event('input');assert.equal(ui.find('button','发送给 Pi').disabled,true);const filesScope=all(ui.body).find(n=>n.tagName==='label'&&n.textContent==='已导入资料').children[0];assert.equal(filesScope.checked,false);filesScope.checked=true;await filesScope.event('change');await ui.click('button','发送给 Pi');assert.deepEqual(ui.requests.filter(c=>c.operation==='chat.send').at(-1).args.allowedScopes,['market','compute','predict','files']);assert.equal(ui.errors.length,0);
+ await ui.click('button','⌂总览');await ui.click('button','◌交易对话');input=ui.input('输入研究问题');input.value='Continue';await input.event('input');assert.equal(ui.find('button','发送').disabled,true);const filesScope=all(ui.body).find(n=>n.tagName==='label'&&n.textContent==='已导入资料').children[0];assert.equal(filesScope.checked,false);filesScope.checked=true;await filesScope.event('change');await ui.click('button','发送');assert.deepEqual(ui.requests.filter(c=>c.operation==='chat.send').at(-1).args.allowedScopes,['market','compute','predict','files']);assert.equal(ui.errors.length,0);
 });
 
 
 test('image attachments require an explicit files selection and the next turn requires renewed history permission',async t=>{
- const ui=await mount(t,{model:true,images:true});await ui.click('button','πPi 对话');const message=ui.input('输入研究问题');message.value='Inspect the explicitly attached synthetic one-pixel image';await message.event('input');
+ const ui=await mount(t,{model:true,images:true});await ui.click('button','◌交易对话');const message=ui.input('输入研究问题');message.value='Inspect the explicitly attached synthetic one-pixel image';await message.event('input');
  const picker=ui.input('附加图片');picker.files=[{name:'fixture.png',type:'image/png',size:68,dataBase64:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6VhcAAAAASUVORK5CYII='}];await picker.event('change');
- let filesScope=all(ui.body).find(n=>n.tagName==='label'&&n.textContent==='已导入资料').children[0];assert.equal(filesScope.checked,false);assert.equal(ui.find('button','发送给 Pi').disabled,true);assert.match(ui.app.textContent,/后续继续此会话需要再次选择文件范围/);assert.equal(ui.requests.some(c=>c.operation==='chat.send'),false);
- await ui.click('button','移除');assert.equal(ui.find('button','发送给 Pi').disabled,false);await picker.event('change');assert.equal(ui.find('button','发送给 Pi').disabled,true);
- filesScope.checked=true;await filesScope.event('change');await ui.click('button','发送给 Pi');const sent=ui.requests.find(c=>c.operation==='chat.send');assert.deepEqual(sent.args.allowedScopes,['market','compute','predict','files']);assert.equal(sent.args.attachments[0].name,'fixture.png');const saved=ui.service.store.require('chat',sent.args.id);assert.deepEqual(saved.historyScopes,['files']);assert.equal(saved.messages[0].attachments.length,1);
- filesScope=all(ui.body).find(n=>n.tagName==='label'&&n.textContent==='已导入资料').children[0];assert.equal(filesScope.checked,false);const next=ui.input('输入研究问题');next.value='Continue';await next.event('input');assert.equal(ui.find('button','发送给 Pi').disabled,true);assert.equal(ui.errors.length,0);
+ let filesScope=all(ui.body).find(n=>n.tagName==='label'&&n.textContent==='已导入资料').children[0];assert.equal(filesScope.checked,false);assert.equal(ui.find('button','发送').disabled,true);assert.match(ui.app.textContent,/后续继续此会话需要再次选择文件范围/);assert.equal(ui.requests.some(c=>c.operation==='chat.send'),false);
+ await ui.click('button','移除');assert.equal(ui.find('button','发送').disabled,false);await picker.event('change');assert.equal(ui.find('button','发送').disabled,true);
+ filesScope.checked=true;await filesScope.event('change');await ui.click('button','发送');const sent=ui.requests.find(c=>c.operation==='chat.send');assert.deepEqual(sent.args.allowedScopes,['market','compute','predict','files']);assert.equal(sent.args.attachments[0].name,'fixture.png');const saved=ui.service.store.require('chat',sent.args.id);assert.deepEqual(saved.historyScopes,['files']);assert.equal(saved.messages[0].attachments.length,1);
+ filesScope=all(ui.body).find(n=>n.tagName==='label'&&n.textContent==='已导入资料').children[0];assert.equal(filesScope.checked,false);const next=ui.input('输入研究问题');next.value='Continue';await next.event('input');assert.equal(ui.find('button','发送').disabled,true);assert.equal(ui.errors.length,0);
 });
 
 
