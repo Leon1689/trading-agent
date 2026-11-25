@@ -5,4 +5,4 @@ for (const name of ['ledger', 'trading']) for (const file of readdirSync(resolve
 for (const name of ['ledger', 'trading', 'preset']) JSON.parse(readFileSync(resolve('packages', name, 'package.json'), 'utf8'));
 for (const folder of ['apps/trading-agent', 'apps/trading-agent/web', '.pi/extensions']) for (const file of readdirSync(resolve(folder))) if (file.endsWith('.js')) execFileSync(process.execPath, ['--check', resolve(folder, file)], { stdio: 'inherit' });
 JSON.parse(readFileSync('package.json','utf8'));
-console.log('Pi application, legacy packages and manifests checked.');
+console.log('Trading application, compatibility packages and manifests checked.');
