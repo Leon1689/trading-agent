@@ -1,6 +1,6 @@
-# Pi native capabilities
+# Runtime capabilities
 
-Application 3.3.0 uses the official Pi Coding Agent 1.6.0 runtime. Native settings and commands are retained through configurable entry points. The Web UI and isolated native CLI have distinct loading and permission boundaries. Machine-readable settings are in [pi-native-capabilities.json](pi-native-capabilities.json).
+Application 3.3.0 exposes configurable runtime settings and commands; [runtime integration](runtime-integration.md) records the dependency and module boundaries. The Web UI and isolated native CLI have distinct loading and permission boundaries. Machine-readable settings are in [runtime-capabilities.json](runtime-capabilities.json).
 
 ## 逐项能力与差异
 
@@ -16,7 +16,7 @@ Application 3.3.0 uses the official Pi Coding Agent 1.6.0 runtime. Native settin
 | AGENTS/SYSTEM/APPEND_SYSTEM、Skills、技能命令、提示模板 | 🟨DefaultResourceLoader；`resources.*`；`enableSkillCommands`、`expandPromptTemplates` | 实测发现、模板参数、resources授权及历史再授权；Web仅加载允许目录的文本资源 |
 | 主题、键位、编辑器、终端图像、剪贴板 | 🟦原生TUI `/settings`、主题文件、keybindings；`terminal`、`images`、编辑器设置；`permissions.clipboard` | 实际TUI启动及设置面板；图像/剪贴板/外部编辑器逐项设备测试未做 |
 | 扩展、事件hook、自定义工具/模型/命令/UI | 🟦官方CLI自动发现、`--extension`、`/reload`；`resources.extensions` | 用户扩展、命令、自定义provider与交易/文件工具实测共存；Web宿主不直接执行扩展 |
-| npm/git/local Pi包及包管理 | 🟦原生`install/update/remove/list/config`和`settings.packages` | 保留原命令；安装须授予资源写、进程与网络；联网安装需单独验证 |
+| npm/git/local 包及包管理 | 🟦原生`install/update/remove/list/config`和`settings.packages` | 保留原命令；安装须授予资源写、进程与网络；联网安装需单独验证 |
 | MCP stdio/HTTP、认证、资源、工具暴露 | 🟦`mcp.json`、原生命令、`resources.mcp` | 真实本地stdio MCP echo实测；远程HTTP/OAuth需网络/回调授权，未登录真实服务 |
 | codemode、tool_search、动态工具 | 🟦`defaultTools:["+codemode","+tool_search"]`或官方CLI工具选项 | codemode嵌套调用真实交易计算通过；tool_search保留官方注册/选择机制，未做搜索排序专项评测 |
 | read/bash/edit/write | 🟦官方工厂+🟨权限包装；Web默认四个 | 原真实文件/Shell回归通过 |
@@ -28,9 +28,9 @@ Application 3.3.0 uses the official Pi Coding Agent 1.6.0 runtime. Native settin
 | HTML/JSONL导出、会话分享 | 🟦原生export/share命令；Web现有JSONL和本机分享 | 原导出回归；外部分享须用户主动命令及网络权限，未上传任何会话 |
 | cache warming、transport、缓存设置 | 🟨`cacheWarming`、`transport`、`websockets`等原schema | 参数送达SDK；官方默认idle，config.example显式off，可改；真实缓存计费/性能未测 |
 | 设置优先级、项目配置、项目信任 | 🟦61个官方顶层设置键完整校验；原生全局/项目配置与trust保留 | Web `settingsSource:memory/files`；原生始终官方文件设置；Web不执行任意扩展 |
-| CLI环境变量、平台与终端行为 | 🟨`native.environment`接收Pi专属字符串旗标；原生参数透传 | 资源路径由agentDir管理；交易隔离启动器当前仅macOS，⬜Linux/Windows隔离后端未实现 |
+| CLI环境变量、平台与终端行为 | 🟨`native.environment`接收运行时专属字符串旗标；原生参数透传 | 资源路径由agentDir管理；交易隔离启动器当前仅macOS，⬜Linux/Windows隔离后端未实现 |
 
-上述“保留”指用户可以使用官方实现或配置入口，不代表所有付费服务、设备、上游每一种组合都完成端到端验收。Pi本身没有内置的通用plan mode/subagent编排，不将这类扩展方向写成被本项目删除的原生能力。Chord/pi-durable等同仓其他产品也不等于Coding Agent自身功能。
+上述“保留”指用户可以使用官方实现或配置入口，不代表所有付费服务、设备、上游每一种组合都完成端到端验收。该运行时没有内置通用plan mode/subagent编排；其他同仓产品不属于本应用的集成范围。
 
 ## 配置与数据结构
 
@@ -94,12 +94,12 @@ Application 3.3.0 uses the official Pi Coding Agent 1.6.0 runtime. Native settin
 在项目目录执行；将示例绝对路径换成自己的数据目录。授权只涵盖该次原生进程：
 
 ```sh
-npm run native -- --home /absolute/path/pi-data --scopes compute,resources,localRead,localWrite,shell --
-npm run native -- --home /absolute/path/pi-data --scopes compute,resources -- --mode rpc
-npm run native -- --home /absolute/path/pi-data --scopes compute,resources -- --tools +codemode,+tool_search
+npm run native -- --home /absolute/path/trading-data --scopes compute,resources,localRead,localWrite,shell --
+npm run native -- --home /absolute/path/trading-data --scopes compute,resources -- --mode rpc
+npm run native -- --home /absolute/path/trading-data --scopes compute,resources -- --tools +codemode,+tool_search
 ```
 
-普通Web对话启用“Pi资源发现”授权后，可使用工作目录的AGENTS、Skills与提示模板；文件读取、修改、Shell、broker不会随它自动勾选。没有配置真实模型时，计算表单仍可用，但自然语言对话不冒充在线模型。
+普通Web对话启用“项目资源”授权后，可使用工作目录的AGENTS、Skills与提示模板；文件读取、修改、Shell、broker不会随它自动勾选。没有配置真实模型时，计算表单仍可用，但自然语言对话不冒充在线模型。
 
 
 ## Validation

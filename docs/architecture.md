@@ -2,7 +2,7 @@
 
 trading agent is a local application for research, options analysis, strategy accounting, and human-confirmed paper orders. Its application layer separates the conversation runtime, deterministic business tools, data providers, and execution permissions.
 
-The runtime adapter uses Pi Coding Agent 1.6.0 for the agent loop and native conversation format; integration details and third-party attribution are recorded in [technical design](technical-design.md) and [third-party notices](../THIRD_PARTY_NOTICES.md).
+The application supplies the trading services and permission boundaries. The conversation engine is provided by an external SDK; [runtime integration](runtime-integration.md) identifies the dependency and distinguishes reused components from application code.
 
 ## Runtime boundaries
 
@@ -37,7 +37,7 @@ The model can prepare a trade and read its status. Human-only confirmation endpo
 
 | Path | Responsibility |
 |---|---|
-| `apps/trading-agent/runtime.js` | Construct the standalone application, data directories, ledger, Pi runner, and service. |
+| `apps/trading-agent/runtime.js` | Construct the standalone application, data directories, ledger, conversation adapter, and service. |
 | `apps/trading-agent/server.js` | Authenticated loopback HTTP API and static UI. |
 | `apps/trading-agent/web/` | Research views, conversations, ledger forms, and broker confirmation cards. |
 | `packages/trading/pi-session-runtime.js` | Official AgentSession integration, events, budgets, cancellation, history, and settings. |
@@ -55,7 +55,7 @@ The model can prepare a trade and read its status. Human-only confirmation endpo
 
 ## Data ownership
 
-Pi JSONL is authoritative for native conversation history. SQLite stores the application's UI projection and business records. Editing a conversation creates a branch; it does not replace the source history.
+Runtime JSONL is authoritative for native conversation history. SQLite stores the application's UI projection and business records. Editing a conversation creates a branch; it does not replace the source history.
 
 The strategy ledger stores a per-symbol cost convention. It is not a broker tax-lot database. Broker receipts and snapshots do not silently rewrite it.
 
@@ -67,4 +67,4 @@ Provider configuration, model credentials, and execution configuration are separ
 
 The repository includes controlled-response tests. External account access, data subscriptions, model behavior, and broker execution must be validated in the configured environment.
 
-See [technical design](technical-design.md), [native capabilities](pi-native-capabilities.md), and [conversational trading](conversational-trading.md).
+See [technical design](technical-design.md), [native capabilities](runtime-capabilities.md), and [conversational trading](conversational-trading.md).

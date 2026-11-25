@@ -6,7 +6,7 @@ Use Node.js 26 on macOS for the complete test suite. Install dependencies with `
 
 ## Module boundaries
 
-- Keep the primary runtime on the official Pi `AgentSession` and `SessionManager` APIs.
+- Use the supported `AgentSession` and `SessionManager` APIs through the runtime adapter; preserve the integration boundaries in [runtime integration](docs/runtime-integration.md).
 - Keep calculations deterministic and independent of model output or broker transport.
 - Register business operations through the catalog and validate every persistence/network boundary.
 - Model tools must never expose human confirmation, order submission, or credential changes.

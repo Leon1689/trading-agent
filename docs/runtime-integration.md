@@ -1,19 +1,19 @@
-# Pi and the trading application
+# Runtime integration
 
-The application composes Pi Coding Agent 1.6.0; it does not replace the upstream runtime.
+The conversation runtime is an external dependency: Pi Coding Agent 1.6.0. The application integrates it with trading services, persistence, and permission boundaries. Dependency versions and attribution are recorded in [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 ```mermaid
 flowchart LR
-    UI[Pi CLI / TUI / RPC] --> Session[AgentSession]
+    UI[Runtime CLI / TUI / RPC] --> Session[AgentSession]
     Session --> Core[Agent core and model runtime]
     Session --> Tools[Native tools]
     Session --> Resources[Resources / extensions / MCP]
     Session <--> History[SessionManager JSONL tree]
 ```
 
-The original Pi components remain available through the native entry. The trading Web application uses the same SDK with a scoped tool registry and application-specific persistence. The complete application diagram is in [architecture](architecture.md).
+The runtime components remain available through the terminal entry. The trading Web application uses the same SDK with a scoped tool registry and application-specific persistence. The complete application diagram is in [architecture](architecture.md).
 
-| Component | Pi | Trading application | Relationship |
+| Component | Runtime dependency | Trading application | Relationship |
 |---|---|---|---|
 | Agent loop and model calls | AgentSession, core, ModelRuntime | Same official implementations | Reused |
 | History and branching | SessionManager JSONL | Native history plus SQLite UI projection | Reused; application projection added |
@@ -27,6 +27,6 @@ The original Pi components remain available through the native entry. The tradin
 | Market and account data | Extension responsibility | Fixed read-only provider adapters | Added |
 | Order preparation | Application responsibility | Structured intent and IBKR what-if | Added |
 | Broker actions | Application responsibility | Human-confirmed paper-account adapter | Added; external validation required |
-| Funded-account trading and commercial services | Outside Pi's scope | No live execution, FX, copy trading, or commercial account integration | Not implemented |
+| Funded-account trading and commercial services | Outside the runtime scope | No live execution, FX, copy trading, or commercial account integration | Not implemented |
 
 The Web UI does not reproduce every native terminal interaction. Native extensions run through the isolated CLI, and their remote services require configuration. Retaining a native command is distinct from testing every provider, device, or remote integration.

@@ -21,4 +21,4 @@
 ## Platform support
 
 - Add Linux and Windows isolation backends with equivalent boundaries.
-- Improve native/Web feature navigation without removing the original Pi entry points.
+- Improve native/Web feature navigation while preserving the configured runtime entry points.

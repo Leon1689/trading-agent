@@ -16,6 +16,19 @@
 
 共有 101 项业务操作；57 项可按权限范围提供给模型，44 项仅供用户操作。文件与 Shell 工具另外管理。
 
+## 工程实现
+
+| 模块 | 本项目实现的职责 | 代码入口 |
+|---|---|---|
+| 交易流程 | 结构化需求、缺参追问、冻结预览、人工确认、警告处理与未知结果核对 | [trade-flow.js](packages/trading/trade-flow.js) |
+| 权限与接口 | 统一操作目录、参数校验、调用方身份、数据范围与审计 | [service.js](packages/trading/service.js) |
+| 期权计算 | 定价、IV、Greeks、情景分析和 Wheel 约束 | [quant.js](packages/trading/quant.js) |
+| 策略账本 | 整数分记账、版本冲突、修改提案、行权和撤销 | [ledger.js](packages/ledger/ledger.js) |
+| 券商适配 | 只读查询与模拟执行分离、账户检查、回执状态处理 | [ibkr-execution.js](packages/trading/ibkr-execution.js) |
+| 工作台 | 本地认证、研究界面、对话、账本表单与订单确认卡 | [应用目录](apps/trading-agent) |
+
+模型循环、通用工具和终端能力由运行时依赖提供，本项目负责业务集成与权限管理。实现边界见[工程说明](docs/implementation.md)和[运行时集成](docs/runtime-integration.md)。
+
 ## 快速开始
 
 完整功能和测试环境为 **macOS + Node.js 26**。文件、Shell 和原生 CLI 的隔离依赖 macOS `sandbox-exec`；其他平台的隔离后端尚未实现。
@@ -58,7 +71,7 @@ npm run agent -- --home "$HOME/.local/share/trading-agent" "计算这份期权�
 npm run native -- --home "$HOME/.local/share/trading-agent" --scopes compute,resources --
 ```
 
-终端入口提供 TUI、print、JSON、RPC、扩展与 MCP。Web 和原生入口使用独立的会话/资源目录；完整配置见 [运行时能力说明](docs/pi-native-capabilities.md)。
+终端入口提供 TUI、print、JSON、RPC、扩展与 MCP。Web 和原生入口使用独立的会话/资源目录；完整配置见 [运行时能力说明](docs/runtime-capabilities.md)。
 
 ## 目录
 
@@ -90,6 +103,7 @@ node examples/option-pricing.mjs
 ## 文档
 
 - [技术设计](docs/technical-design.md)：模块、数据结构、权限与状态。
+- [工程说明](docs/implementation.md)：核心流程、设计取舍和代码验证入口。
 - [功能覆盖](docs/bobby-coverage.md)：研究、交易与产品功能的支持范围。
 - [安全说明](SECURITY.md)：数据目录、权限和问题报告。
 - [路线图](docs/roadmap.md)：外部联调、对账与平台支持。

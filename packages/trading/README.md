@@ -40,7 +40,7 @@
 
 根目录`npm test`包含旧账本、业务、官方Pi SDK和独立应用测试，`npm run check`检查语法/manifest。原生Pi测试只替换provider传输事件，实际运行框架会话和树存储；这不能替代真实模型、行情、券商或全部BOBBY功能验收。
 
-原生文件、Shell和资源配置见[Pi能力说明](../../docs/pi-native-capabilities.md)。
+原生文件、Shell和资源配置见[运行时能力说明](../../docs/runtime-capabilities.md)。
 
 
 ## 3.3 对话交易入口

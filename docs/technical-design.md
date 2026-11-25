@@ -1,6 +1,6 @@
 # Technical design
 
-Application 3.3.0 uses Pi Coding Agent 1.6.0. The primary entry is the standalone application; legacy Harness adapters are optional compatibility components.
+Application 3.3.0 separates business operations, calculation, storage, runtime integration, and broker execution. The primary entry is the standalone application; legacy adapters are optional compatibility components.
 
 ## Operation contract
 
@@ -8,10 +8,10 @@ Application 3.3.0 uses Pi Coding Agent 1.6.0. The primary entry is the standalon
 
 Each catalog entry contains `operation`, `title`, `description`, `group`, `kind`, `scope`, `model`, `inputSchema`, and `example`. Unknown fields are rejected where the contract requires a closed object. Runtime handlers perform semantic validation in addition to schema checks.
 
-The catalog contains 101 operations. Only the 57 entries marked for model use can become tools, and the current scope further restricts them. The remaining 44 operations are human-only. Built-in Pi tools are managed separately.
+The catalog contains 101 operations. Only the 57 entries marked for model use can become tools, and the current scope further restricts them. The remaining 44 operations are human-only. Built-in runtime tools are managed separately.
 
 - HTTP handlers bind the caller as human after local authentication and request checks.
-- Pi tool adapters bind the caller as model and supply the granted scopes.
+- Runtime tool adapters bind the caller as model and supply the granted scopes.
 - Neither `actor` nor extra authority can be supplied through tool JSON.
 - `trade.review`, `trade.confirm`, and other human actions are never exposed as model tools.
 
@@ -38,15 +38,17 @@ Web computer tools run in sandboxed workers without network access or inherited 
 
 Record families include chat projections, files, reports, portfolios, watchlists, notifications, alerts, provider snapshots, local paper accounts/orders, conditional previews, and trade intents.
 
-Pi `SessionManager` owns the JSONL tree. The application records native user entry IDs for branch operations and exports the original JSONL. Interrupted runs retain their status and can be recovered explicitly without replaying the previous request.
+The SDK’s `SessionManager` owns the JSONL tree. The application records native user entry IDs for branch operations and exports the original JSONL. Interrupted runs retain their status and can be recovered explicitly without replaying the previous request.
 
 ## Models and native capabilities
 
+The runtime dependency is `@earendil-works/pi-coding-agent@1.6.0`. See [runtime integration](runtime-integration.md) for the application/dependency split and [third-party notices](../THIRD_PARTY_NOTICES.md) for attribution.
+
 `createPiSessionRunner` constructs official `AgentSession`, `ModelRuntime`, and `SessionManager` instances. The SDK owns the tool loop, streaming, retry, and compaction. Configuration supplies provider/model references, token and call budgets, timeout, native settings, and resource paths.
 
-The default four computer tools use Pi's official implementations. Optional grep/find/ls/powershell retain their original factories. The native CLI provides terminal UI, RPC, extensions, MCP, package commands, authentication, themes, and other native functions through its isolated entry.
+The default four computer tools use the dependency’s implementations. Optional grep/find/ls/powershell retain their original factories. The native CLI provides terminal UI, RPC, extensions, MCP, package commands, authentication, themes, and other native functions through its isolated entry.
 
-See [Pi capabilities](pi-native-capabilities.md) for the settings and entry-point boundaries.
+See [runtime capabilities](runtime-capabilities.md) for the settings and entry-point boundaries.
 
 ## Calculations and ledger
 
@@ -76,4 +78,4 @@ Provider transports use fixed endpoints, credential references, timeouts, respon
 
 ## Validation
 
-`npm test` covers public contracts with isolated data directories, actual Pi SDK/CLI execution, and synthetic model/provider responses. `npm run check` validates JavaScript and manifests. See [verification](verification.md) for the distinction between local protocol tests and external acceptance.
+`npm test` covers public contracts with isolated data directories, actual SDK/CLI execution, and synthetic model/provider responses. `npm run check` validates JavaScript and manifests. See [verification](verification.md) for the distinction between local protocol tests and external acceptance.

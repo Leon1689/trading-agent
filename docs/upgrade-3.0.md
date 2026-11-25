@@ -96,4 +96,4 @@ npm run check
 
 SDK锁定1.6.0不变，无数据库schema迁移。新增`pi.native`配置；旧配置未填写时，资源发现和官方默认自动压缩/重试恢复启用，cache warming继承官方idle（示例配置为off）。真实模型未配置仍不调用。使用Web发现到私人资源须授予resources，旧会话必须重新满足历史scope。
 
-原生模式：`npm run native -- --home /absolute/path/data --scopes compute,resources --`。默认独立`<home>-pi`存原生会话、配置和模型认证；Web原生JSONL仍在`<home>/sessions`，不自动合并两套会话。备份时同时保留所用Pi资源目录。配置、网络/MCP/本机端口授权和完整能力清单见[pi-native-capabilities.md](pi-native-capabilities.md)。不自动安装扩展、不读取已有用户密钥、不调用券商。
+原生模式：`npm run native -- --home /absolute/path/data --scopes compute,resources --`。默认独立`<home>-pi`存原生会话、配置和模型认证；Web原生JSONL仍在`<home>/sessions`，不自动合并两套会话。备份时同时保留所用Pi资源目录。配置、网络/MCP/本机端口授权和完整能力清单见[runtime-capabilities.md](runtime-capabilities.md)。不自动安装扩展、不读取已有用户密钥、不调用券商。

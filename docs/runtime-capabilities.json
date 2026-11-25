@@ -997,5 +997,5 @@
     "ls",
     "powershell"
   ],
-  "note": "Entry preservation is distinct from real external-service validation; see pi-native-capabilities.md."
+  "note": "Entry preservation is distinct from real external-service validation; see runtime-capabilities.md."
 }

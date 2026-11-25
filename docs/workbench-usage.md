@@ -31,14 +31,14 @@ A complete request specifies the account, instrument, direction, position effect
 
 Review the confirmation card and broker warnings before clicking the final button. Submitted is not Filled. Query the broker status before interpreting a receipt as a fill. If a network result is unknown, do not create a duplicate order.
 
-## Native Pi entry
+## Terminal entry
 
 ```sh
 npm run native -- --home "$HOME/.local/share/trading-agent" --scopes compute,resources --
 npm run native -- --home "$HOME/.local/share/trading-agent" --scopes compute,resources -- --mode rpc
 ```
 
-Add localRead/localWrite/shell only when needed. Native file paths and network destinations are controlled by configuration. See [native capabilities](pi-native-capabilities.md).
+Add localRead/localWrite/shell only when needed. Native file paths and network destinations are controlled by configuration. See [native capabilities](runtime-capabilities.md).
 
 ## Data and compatibility
 

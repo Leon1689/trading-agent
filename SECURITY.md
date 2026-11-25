@@ -6,7 +6,7 @@ The application binds to loopback and uses an authenticated browser session. It 
 
 Keep runtime data outside the source checkout. Do not commit broker accounts, access tokens, model credentials, session transcripts, databases, or Gateway certificates. Provider configuration stores environment-variable names; the application reads their values at runtime.
 
-Pi resources and computer tools have independent grants. Native extensions execute as trusted code within their configured process boundary. Only enable extensions, packages, and MCP servers you intend to trust.
+Runtime resources and computer tools have independent grants. Native extensions execute as trusted code within their configured process boundary. Only enable extensions, packages, and MCP servers you intend to trust.
 
 ## Broker actions
 

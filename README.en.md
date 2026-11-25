@@ -46,6 +46,8 @@ The release contains the IBKR paper protocol adapter, verified against controlle
 
 `apps/trading-agent` hosts the standalone app. `packages/trading` contains domain tools and runtime adapters; `packages/ledger` owns the ledger. `packages/preset` retains legacy Harness compatibility and is not required by the main application. Documentation, credential-free examples, and CI live in `docs`, `examples`, and `.github`.
 
+The application implements the trade-intent state machine, human-confirmation workflow, scoped service catalog, deterministic calculations, strategy ledger, and provider adapters. The external runtime supplies the generic agent loop, native tools, and terminal capabilities. See [implementation](docs/implementation.md) and [runtime integration](docs/runtime-integration.md) for the boundaries and code references.
+
 ```sh
 npm run check
 npm test
