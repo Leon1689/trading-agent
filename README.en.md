@@ -63,3 +63,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [ver
 ## Reconciliation and monitoring
 
 Version 3.4 adds saved position/execution comparisons with explicit account and contract mappings, plus per-order opt-in background status queries. Reports do not post to the ledger; monitoring never submits or replays an order. See [usage, contracts and limits](docs/reconciliation-and-monitoring.md). Run `node examples/reconciliation.mjs` for an offline synthetic example.
+
+## Personal assistant (3.5)
+
+Investment plans with human acceptance, holdings briefings, same-expiry multi-leg option payoff and Greeks, public prediction order books, persistent research/condition jobs, and opt-in browser notifications. See [design and limitations](docs/personal-assistant.md) and [coverage](docs/bobby-coverage.md). Run `node examples/personal-assistant.mjs` without credentials.

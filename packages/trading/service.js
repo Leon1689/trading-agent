@@ -1,3 +1,6 @@
+import { analyzeOptionStrategy } from './option-strategy.js';
+import { InvestmentAssistant } from './investment-assistant.js';
+import { AssistantJobs } from './assistant-jobs.js';
 import { OrderMonitor } from './order-monitor.js';
 import { Reconciliation } from './reconciliation.js';
 /** Application operations shared by the authenticated Host, Pi tools and Harness tools. */
@@ -17,7 +20,7 @@ import { priceOption, impliedVolatility, optionScenario, analyzeWheel, portfolio
 
 const defaultScopes = ['market', 'compute', 'predict'];
 const allScopes = ['market', 'compute', 'predict', 'portfolio', 'files', 'ledger', 'broker', 'localRead', 'localWrite', 'shell', 'resources', 'trade'];
-const computations = { 'quant.price': priceOption, 'quant.iv': impliedVolatility, 'quant.scenario': optionScenario, 'wheel.analyze': analyzeWheel, 'portfolio.risk': portfolioRisk, 'portfolio.backtest': backtestPortfolio, 'options.rank': rankOptions, 'research.technicals': technicalIndicators, 'research.events': classifyNews, 'portfolio.rebalancePlan': planRebalance, 'predict.compare': comparePredictionMarkets };
+const computations = { 'options.strategy': analyzeOptionStrategy, 'quant.price': priceOption, 'quant.iv': impliedVolatility, 'quant.scenario': optionScenario, 'wheel.analyze': analyzeWheel, 'portfolio.risk': portfolioRisk, 'portfolio.backtest': backtestPortfolio, 'options.rank': rankOptions, 'research.technicals': technicalIndicators, 'research.events': classifyNews, 'portfolio.rebalancePlan': planRebalance, 'predict.compare': comparePredictionMarkets };
 const safeChat = ({ piMessages, events, ...chat }) => chat;
 const fileSummary = ({ content, dataBase64, parsed, ...file }) => file;
 const sha = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -33,11 +36,12 @@ export class TradingService {
     this.providers = providers ?? createProviders(this.config.providers);
     this.store = store ?? new TradingStore(path); this.runner = runner; this.now = now;
     this.trades=new TradeFlow(this.store,this.config,{gateway,now});
+    this.assistant=new InvestmentAssistant(this);this.assistantJobs=new AssistantJobs(this);
     this.orderMonitor=new OrderMonitor(this);this.reconciliation=new Reconciliation(this);
     this.paper = new PaperExecution(this.store, this.config, now); this.activeChats = new Set(); this.activeAlerts = new Set(); this.closing = false; this.conditions = new ConditionalPaper(this.store, this.paper, now); this.workspace = new WorkspaceFeatures(this);
   }
   capabilities() {
-    return { native: this.runner?.native??null, computer: this.runner?.computer??null, providers: this.providers.capabilities(), brokerAccess: this.config.execution.mode==='IBKR_PAPER'?'PAPER_HUMAN_CONFIRM':'READ_ONLY', reconciliation:{savedReports:true,automaticLedgerPosting:false},orderMonitoring:{enabled:this.config.orderMonitoring.enabled,perOrderOptIn:true,intervalMs:this.config.orderMonitoring.intervalMs},conversationalTrading:{intent:true,humanConfirmation:true,brokerPaper:this.config.execution.mode==='IBKR_PAPER',connectionValidated:false,live:false}, execution: this.config.execution.mode, chat: { enabled: this.config.pi.enabled && !!this.runner, images: this.config.pi.enabled && this.runner?.supportsImages === true }, notifications: { local: true, background: this.config.scheduler.enabled, externalDelivery: false }, files: ['text/csv', 'application/json', 'application/x-ndjson', 'text/plain', 'text/markdown', 'image/png', 'image/jpeg', 'image/webp'], liveTrading: false, publicSharing: false, nativeMobileApp: false, installableWebApp: true, localSharing: true, conditionalPreviews: true };
+    return { native: this.runner?.native??null, computer: this.runner?.computer??null, providers: this.providers.capabilities(), brokerAccess: this.config.execution.mode==='IBKR_PAPER'?'PAPER_HUMAN_CONFIRM':'READ_ONLY', reconciliation:{savedReports:true,automaticLedgerPosting:false},orderMonitoring:{enabled:this.config.orderMonitoring.enabled,perOrderOptIn:true,intervalMs:this.config.orderMonitoring.intervalMs},conversationalTrading:{intent:true,humanConfirmation:true,brokerPaper:this.config.execution.mode==='IBKR_PAPER',connectionValidated:false,live:false}, execution: this.config.execution.mode, chat: { enabled: this.config.pi.enabled && !!this.runner, images: this.config.pi.enabled && this.runner?.supportsImages === true }, notifications: { local: true, background: this.config.scheduler.enabled, externalDelivery: false }, files: ['text/csv', 'application/json', 'application/x-ndjson', 'text/plain', 'text/markdown', 'image/png', 'image/jpeg', 'image/webp'], liveTrading: false, publicSharing: false, nativeMobileApp: false, installableWebApp: true, localSharing: true, conditionalPreviews: true, personalAssistant: {investmentPlans:true,holdingsBriefs:true,optionStrategies:true,predictionDepth:true,conditionMonitoring:true,automaticBrokerSubmission:false} };
   }
   bootstrap() { return { catalog, capabilities: this.capabilities(), settings: this.settings(), limits: { textFileBytes: this.config.limits.textFileBytes, imageBytes: this.config.limits.imageBytes, requestBytes: this.config.limits.requestBytes, requestTimeoutMs: this.config.pi.timeoutMs + 10000 } }; }
   settings() { return this.store.get('settings', 'display') ?? { id: 'display', revision: 0, language: 'zh', timezone: 'Asia/Shanghai' }; }
@@ -66,6 +70,12 @@ export class TradingService {
   }
   async dispatch(operation, args, context) {
     const { actor, signal } = context;
+    if(operation==='jobs.configure')return this.assistantJobs.configure(args);
+    if(operation==='jobs.list')return this.assistantJobs.list();
+    if(operation==='jobs.run')return this.assistantJobs.run(args.id,signal,true);
+    if(operation==='holdings.reports')return this.store.list('holdingsReport');
+    if(operation==='holdings.report')return this.store.require('holdingsReport',args.id);
+    if(/^(plan|holdings)\./.test(operation)||['research.opportunities','predict.board'].includes(operation))return this.assistant.execute(operation,args,context);
     if(operation.startsWith('reconcile.')) {
       switch(operation) {
         case 'reconcile.create': return this.reconciliation.create(args);
@@ -90,7 +100,7 @@ export class TradingService {
         case 'trade.discard': return this.trades.discard(args);
       }
     }
-    if (operation.startsWith('market.') || operation.startsWith('broker.') || ['predict.markets', 'predict.detail'].includes(operation)) {
+    if (operation.startsWith('market.') || operation.startsWith('broker.') || ['predict.markets', 'predict.detail', 'predict.orderbook'].includes(operation)) {
       const result = await this.providers.request(operation, args, { signal }); signal?.throwIfAborted();
       if (operation === 'broker.snapshot') {
         const snapshot = this.store.put('snapshot', randomUUID(), { ...result, immutable: true, accountId: args.accountId, inputAuthority: result.mode === 'synthetic' ? 'SYNTHETIC_FIXTURE' : 'BROKER_REPORTED', strategyLedgerUpdated: false, quality: { complete: false, reason: result.mode === 'synthetic' ? '仅合成输入，非实际账户证据。' : '账户、持仓、挂单来自独立读取；未建立原子快照或完整历史。' } }, 0);
@@ -146,8 +156,8 @@ export class TradingService {
         requireThat(pairs.every(([symbol, weight]) => /^[A-Z0-9.\-]{1,24}$/.test(symbol) && typeof weight === 'number' && Number.isFinite(weight) && weight > 0 && weight <= 1) && Math.abs(pairs.reduce((n, [, w]) => n + w, 0) - 1) <= 1e-9, 'INVALID_WEIGHTS', '权重必须为正且合计为1。');
         return this.store.put('portfolio', args.id ?? randomUUID(), { name: args.name, weights: args.weights, note: args.note ?? '', type: 'RESEARCH_ONLY' }, args.id ? args.revision : 0);
       }
-      case 'portfolio.list': return this.store.list('portfolio', { limit: this.config.limits.listLimit });
-      case 'portfolio.get': return this.store.require('portfolio', args.id);
+      case 'portfolio.list': return this.store.list('portfolio', { limit: this.config.limits.listLimit }).filter(row=>this.assistant.allowed(row,context));
+      case 'portfolio.get': { const row=this.store.require('portfolio', args.id);requireThat(this.assistant.allowed(row,context),'SCOPE_DENIED','组合包含本轮未授权的私人资料。',403);return row; }
       case 'portfolio.backtestLive': {
         const symbols = [...new Set([...Object.keys(args.weights), ...(args.benchmarkSymbol ? [args.benchmarkSymbol] : [])])];
         requireThat(symbols.length > 0 && symbols.length <= 30, 'INVALID_WEIGHTS', '回测标的数量无效。');
@@ -257,6 +267,7 @@ export class TradingService {
       try { results.push(await this.evaluateAlert(row.id, signal)); } catch (error) { if (signal?.aborted) throw error; results.push({ id: row.id, error: errorBody(error) }); }
     }
     for (const row of this.store.dueRecords('brief',this.now(),this.config.limits.listLimit)) { signal?.throwIfAborted(); try { results.push(await this.workspace.runBrief(row.id,signal)); } catch(error) { if(signal?.aborted)throw error; results.push({id:row.id,error:errorBody(error)}); } }
+    results.push(...await this.assistantJobs.tick(signal));
     return results;
   }
   readShare(token) { return this.workspace.readShare(token); }

@@ -9,7 +9,7 @@ import { TradingError, errorBody } from '../../packages/trading/errors.js';
 import { locales } from '../../packages/trading/locales.js';
 import { createStandaloneRuntime } from './runtime.js';
 const root = join(dirname(fileURLToPath(import.meta.url)), 'web');
-const assets = new Map([['/','index.html'],['/index.html','index.html'],['/app.js','app.js'],['/ui-model.js','ui-model.js'],['/copy.js','copy.js'],['/conversations.js','conversations.js'],['/trades.js','trades.js'],['/reconciliation.js','reconciliation.js'],['/ledger.js','ledger.js'],['/styles.css','styles.css'],['/manifest.webmanifest','manifest.webmanifest'],['/sw.js','sw.js'],['/icon.svg','icon.svg']]);
+const assets = new Map([['/','index.html'],['/index.html','index.html'],['/app.js','app.js'],['/ui-model.js','ui-model.js'],['/copy.js','copy.js'],['/conversations.js','conversations.js'],['/trades.js','trades.js'],['/reconciliation.js','reconciliation.js'],['/investment-plans.js','investment-plans.js'],['/desktop-notifications.js','desktop-notifications.js'],['/ledger.js','ledger.js'],['/styles.css','styles.css'],['/manifest.webmanifest','manifest.webmanifest'],['/sw.js','sw.js'],['/icon.svg','icon.svg']]);
 const types = { html:'text/html; charset=utf-8',js:'text/javascript; charset=utf-8',css:'text/css; charset=utf-8',webmanifest:'application/manifest+json',svg:'image/svg+xml' };
 const equal = (a, b) => { const x=Buffer.from(a ?? ''),y=Buffer.from(b ?? '');return x.length===y.length&&timingSafeEqual(x,y); };
 const htmlEscape = s => String(s).replace(/[&<>"']/g, x => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));

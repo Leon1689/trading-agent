@@ -1,3 +1,4 @@
+import { assistantCatalog, assistantFieldLabels } from './assistant-catalog.js';
 /** Product copy for the native workbench; returned by the authenticated Host bootstrap. */
 export const locales = {
   "zh": {
@@ -924,3 +925,10 @@ const tradeTitles={
 const tradeLabels={snapshotId:['固定快照ID','Fixed snapshot ID'],ledgerRevision:['账本版本','Ledger revision'],accountScopeConfirmed:['已核对账户归属','Account ownership verified'],bindings:['股票合约映射','Stock contract bindings'],fields:['提取的需求字段','Extracted intent fields'],clear:['需清空的字段','Fields to clear'],chatId:['会话编号','Conversation ID'],conid:['IBKR合约编号','IBKR contract ID'],underlyingConid:['标的合约编号','Underlying contract ID'],month:['合约月份','Contract month'],wheelEvidence:['人工核对的Wheel证据','Human-reconciled Wheel evidence']};
 for(const[key,values]of Object.entries(tradeTitles)){locales.zh.operationTitles[key]=values[0];locales.en.operationTitles[key]=values[1];}
 for(const[key,values]of Object.entries(tradeLabels)){locales.zh.fieldLabels[key]=values[0];locales.en.fieldLabels[key]=values[1];}
+
+for(const op of assistantCatalog){locales.zh.operationTitles[op.operation]=op.title;locales.en.operationTitles[op.operation]=op.english;}
+for(const [key,values] of Object.entries(assistantFieldLabels)){locales.zh.fieldLabels[key]=values[0];locales.en.fieldLabels[key]=values[1];}
+const assistantResultLabels={
+ expiration:['到期日','Expiration'],entryPrice:['建仓价格','Entry price'],standardDeliverableVerified:['已核对标准交割','Standard deliverable verified'],netEntryCashFlow:['建仓净现金流','Net entry cash flow'],maxProfit:['最大收益（美元）','Maximum profit (USD)'],maxLoss:['最大亏损（美元）','Maximum loss (USD)'],unboundedProfit:['收益无上界','Unbounded profit'],unboundedLoss:['亏损无上界','Unbounded loss'],breakEven:['盈亏平衡价格','Break-even prices'],zeroProfitIntervals:['零收益区间','Zero-profit intervals'],payoffCurve:['到期损益曲线','Expiry payoff curve'],profit:['损益（美元）','Profit (USD)'],greekUnits:['Greeks单位','Greek units'],missing:['缺失或限制','Missing data / limitations'],objective:['投资目标','Investment objective'],riskTolerance:['风险偏好','Risk tolerance'],horizonMonths:['期限（月）','Horizon (months)'],budget:['预算（美元）','Budget (USD)'],maxPositionWeight:['单一权重上限','Position weight limit'],excludedSymbols:['排除标的','Excluded symbols'],requiredScopes:['所需授权','Required scopes'],questions:['待补问题','Missing questions'],violations:['约束冲突','Constraint violations'],reportedCash:['券商报告现金','Reported cash'],netPositionValue:['净持仓市值','Net position value'],grossPositionValue:['总绝对市值','Gross position value'],grossWeight:['绝对市值集中度','Gross value concentration'],netAssetValue:['该币种净资产','Net assets in currency'],researchSymbols:['简报股票列表','Briefing stock symbols'],currencies:['按币种统计','Currency buckets'],portfolioGreeks:['组合Greeks','Portfolio Greeks'],bestBid:['最优买价','Best bid'],bestAsk:['最优卖价','Best ask'],bids:['买盘','Bids'],asks:['卖盘','Asks']
+};
+for(const[key,values]of Object.entries(assistantResultLabels)){locales.zh.fieldLabels[key]=values[0];locales.en.fieldLabels[key]=values[1];}

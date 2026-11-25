@@ -1,6 +1,6 @@
 # Technical design
 
-Application 3.4.0 separates business operations, calculation, storage, runtime integration, and broker execution. The primary entry is the standalone application; legacy adapters are optional compatibility components.
+Application 3.5.0 separates business operations, calculation, storage, runtime integration, and broker execution. The primary entry is the standalone application; legacy adapters are optional compatibility components.
 
 ## Operation contract
 
@@ -8,7 +8,7 @@ Application 3.4.0 separates business operations, calculation, storage, runtime i
 
 Each catalog entry contains `operation`, `title`, `description`, `group`, `kind`, `scope`, optional `requiredScopes`, `model`, `inputSchema`, and `example`. Unknown fields are rejected where the contract requires a closed object. Runtime handlers perform semantic validation in addition to schema checks.
 
-The catalog contains 107 operations. Only the 60 entries marked for model use can become tools, and the current scope further restricts them. The remaining 47 operations are human-only. Built-in runtime tools are managed separately.
+The catalog contains 122 operations. Only the 72 entries marked for model use can become tools, and the current scope further restricts them. The remaining 50 operations are human-only. Built-in runtime tools are managed separately.
 
 - HTTP handlers bind the caller as human after local authentication and request checks.
 - Runtime tool adapters bind the caller as model and supply the granted scopes.
@@ -83,3 +83,7 @@ Provider transports use fixed endpoints, credential references, timeouts, respon
 ## Reconciliation and background status
 
 [Reconciliation and monitoring](reconciliation-and-monitoring.md) defines six new operations, records, exact quantity comparisons and worker behavior. Report reads require broker + ledger + trade scopes together. Human review does not post cash flows or certify Wheel evidence. The independent worker has persisted leases and invalidates delayed responses on pause; it can only query orders through the existing gateway. Unchanged observations preserve intent revisions and confirmation; changed receipts invalidate them.
+
+## Personal assistant integration (3.5)
+
+See [personal assistant design](personal-assistant.md) for the complete module graph, data structures, operation scopes, workflow and remaining gaps. The additions reuse the existing runtime, ledger and human-confirmed IBKR paper gateway.

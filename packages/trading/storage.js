@@ -55,7 +55,7 @@ export class TradingStore {
     return {items,total:Number(total),limit,offset,hasMore:offset+items.length<Number(total)};
   }
   dueRecords(kind, now, limit) {
-    requireThat(['brief','alert'].includes(kind) && Number.isFinite(now) && Number.isInteger(limit) && limit >= 1 && limit <= 1000, 'INVALID_PAGE', '任务轮询参数无效。');
+    requireThat(['brief','alert','assistantJob'].includes(kind) && Number.isFinite(now) && Number.isInteger(limit) && limit >= 1 && limit <= 1000, 'INVALID_PAGE', '任务轮询参数无效。');
     return this.db.prepare("SELECT * FROM records WHERE kind=? AND json_extract(body,'$.enabled')=1 AND json_extract(body,'$.nextRunAt')<=? ORDER BY json_extract(body,'$.nextRunAt'),id LIMIT ?").all(kind,now,limit).map(row=>({...JSON.parse(row.body),id:row.id,revision:row.revision,updatedAt:row.updated_at}));
   }
   /** expectedRevision=0 creates exclusively; every update must name the revision read by the caller. */

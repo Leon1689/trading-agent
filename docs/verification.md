@@ -37,3 +37,13 @@ Real account access, market-data entitlements, Gateway authentication, contract 
 The macOS isolation backend is required for the complete suite. Other operating systems do not silently fall back to unrestricted file or Shell access.
 
 Version 3.4 browser acceptance uses a separate temporary data directory and an injected synthetic gateway. Report generation/review/export and background terminal status updates are checked without connecting to IBKR.
+
+## 3.5 personal assistant verification (2026-11-25)
+
+- Final full local suite: 279 tests passed, including the missing/duplicate-currency cash regression. The preceding 39 targeted service, client, DOM, HTTP asset and notification tests also passed.
+- Deterministic checks cover vertical spreads, naked/covered calls, short/protective puts, straddles and condors, zero-profit intervals, Greek signs/scaling, missing IV and mixed-expiry rejection.
+- Service tests cover multi-turn plans, missing questions, human-only acceptance, constraint conflicts, persistence scopes, unknown holdings values, scoped briefs, worker leases, stale quotes, pause during query and no duplicate order drafts.
+- Injected GET transport tests validate canonical Polymarket token/market identity and Kalshi fixed-point bid/complement-ask books. They do not prove live connectivity or market-data entitlements.
+- The browser verified payoff rendering, checkbox-gated research-plan acceptance and refresh, explicit synthetic prediction-board labels, and a 390 px layout without document overflow. It found missing static asset routes and a narrow-screen navigation overflow; both were fixed. The HTTP suite now traverses every imported browser module.
+- Browser notification permission/delivery was tested with an injected Notification class. No OS permission was granted automatically and no cloud delivery was claimed.
+- No real model or brokerage credentials were used. No external order was sent. Existing runtime and ledger regression checks remain in the full suite.

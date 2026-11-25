@@ -97,3 +97,7 @@ IBKR分币种现金不加总`BASE`换算行，`settledCash`不直接冒认为可
 ## 3.3 对话交易入口
 
 新增独立IBKR模拟执行配置和人工确认流程；原查询provider保持只读。配置、订单状态、支持范围和待联调项见[对话交易设计](conversational-trading.md)。请勿将LOCAL_PAPER与券商PAPER混用。
+
+## Personal assistant integration (3.5)
+
+See [personal assistant design](personal-assistant.md) for the complete module graph, data structures, operation scopes, workflow and remaining gaps. The additions reuse the existing runtime, ledger and human-confirmed IBKR paper gateway.

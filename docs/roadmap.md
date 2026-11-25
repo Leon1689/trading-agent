@@ -22,3 +22,7 @@
 
 - Add Linux and Windows isolation backends with equivalent boundaries.
 - Improve native/Web feature navigation while preserving the configured runtime entry points.
+
+## Personal assistant integration (3.5)
+
+See [personal assistant design](personal-assistant.md) for the complete module graph, data structures, operation scopes, workflow and remaining gaps. The additions reuse the existing runtime, ledger and human-confirmed IBKR paper gateway.

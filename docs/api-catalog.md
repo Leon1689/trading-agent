@@ -1,6 +1,6 @@
-# 操作接口目录（3.4.0）
+# 操作接口目录（3.5.0）
 
-模型工具按 scope 选择；列出多个范围时需要全部授予。human 接口不暴露给模型。原生工具另计。
+122项业务操作：72项可按范围注册给模型，50项仅人工。requiredScopes必须同时授予；持久记录还可能附带额外私人范围。原生工具另计。
 
 | 操作 | 名称 | 类型 | 范围 | 模型可见 |
 |---|---|---|---|---|
@@ -111,3 +111,18 @@
 | reconcile.review | 人工记录对账复核意见（不入账） | human | broker + ledger + trade | 否 |
 | trade.watch | 启停此订单的后台只读跟踪 | human | trade | 否 |
 | trade.monitorStatus | 读取订单跟踪状态 | read | trade | 是 |
+| options.strategy | 多腿期权损益与组合Greeks | compute | compute | 是 |
+| plan.draft | 创建或补充投资计划 | write | portfolio | 是 |
+| plan.list | 投资计划列表 | read | portfolio | 是 |
+| plan.get | 查看投资计划与待补问题 | read | portfolio | 是 |
+| plan.accept | 人工确认研究组合 | human | portfolio | 否 |
+| holdings.analyze | 持仓集中度与分币种资产 | read | broker + portfolio | 是 |
+| holdings.brief | 持仓个性化研究简报 | read | broker + portfolio + market | 是 |
+| holdings.reports | 已保存持仓简报 | read | broker + portfolio + market | 是 |
+| holdings.report | 读取持仓简报 | read | broker + portfolio + market | 是 |
+| research.opportunities | 市场机会与研究入口 | read | market | 是 |
+| predict.board | 预测市场成交量、低价与涨跌榜 | read | predict | 是 |
+| predict.orderbook | 预测市场公开实时价阶 | read | predict | 是 |
+| jobs.configure | 设置持仓简报或条件监控任务 | human | portfolio | 否 |
+| jobs.list | 查看持续监控任务 | read | broker + portfolio + market | 是 |
+| jobs.run | 立即运行监控任务 | human | portfolio | 否 |

@@ -1,6 +1,6 @@
 {
   "name": "@local/trading-workbench",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Trading research, options calculations, and human-confirmed IBKR paper execution",
   "type": "module",
   "exports": {

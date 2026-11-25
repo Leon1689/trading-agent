@@ -1,3 +1,4 @@
+import { assistantCatalog } from './assistant-catalog.js';
 import { reconciliationCatalog } from './reconciliation-catalog.js';
 import { tradeCatalog } from './trade-catalog.js';
 import { extendedCatalog } from './extended-catalog.js';
@@ -81,6 +82,7 @@ export const catalog = [
   ...extendedCatalog,
   ...tradeCatalog,
   ...reconciliationCatalog,
+  ...assistantCatalog,
 ];
 
 /** Validate wire/model values, including unknown fields, before reaching operation handlers. */

@@ -45,3 +45,7 @@
 外部运行时的具体包、版本和复用关系见[运行时集成](runtime-integration.md)及[第三方声明](../THIRD_PARTY_NOTICES.md)。
 
 本地测试使用实际运行时与合成模型/券商响应。它们验证集成和状态边界；真实模型、行情权益及 IBKR 模拟账户仍需配置后验收。真实资金下单、复杂多腿执行、自动对账和非 macOS 隔离后端尚未实现。完整验证范围见[验证说明](verification.md)。
+
+## Personal assistant integration (3.5)
+
+See [personal assistant design](personal-assistant.md) for the complete module graph, data structures, operation scopes, workflow and remaining gaps. The additions reuse the existing runtime, ledger and human-confirmed IBKR paper gateway.

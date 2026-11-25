@@ -47,3 +47,7 @@ Keep runtime data outside the source checkout and back it up before migration. T
 ## 成交与持仓对账、自动查单（3.4）
 
 在“市场研究”保存券商只读快照，然后进入“成交与持仓对账”，读取快照/账本、填写人工核对的股票 conid、确认账户归属并生成报告。报告可下载、复核，不自动入账。订单卡的“启用自动查单”仅适用于已提交的 IBKR 模拟订单；每笔独立启停。程序关闭时停止查询。完整步骤、缺失覆盖和错误恢复见 [对账与订单跟踪](reconciliation-and-monitoring.md)。
+
+## Personal assistant integration (3.5)
+
+See [personal assistant design](personal-assistant.md) for the complete module graph, data structures, operation scopes, workflow and remaining gaps. The additions reuse the existing runtime, ledger and human-confirmed IBKR paper gateway.

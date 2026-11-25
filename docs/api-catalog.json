@@ -4109,5 +4109,588 @@
       "additionalProperties": false
     },
     "example": {}
+  },
+  {
+    "operation": "options.strategy",
+    "title": "多腿期权损益与组合Greeks",
+    "english": "Multi-leg option payoff and Greeks",
+    "description": "多腿期权损益与组合Greeks",
+    "group": "options",
+    "kind": "compute",
+    "scope": "compute",
+    "requiredScopes": [
+      "compute"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "underlying": {
+          "type": "string",
+          "description": "共同标的"
+        },
+        "currency": {
+          "type": "string",
+          "description": "币种",
+          "enum": [
+            "USD"
+          ]
+        },
+        "legs": {
+          "type": "array",
+          "description": "同一到期日股票/期权腿，逐腿明确方向、数量、价格和合约",
+          "items": {
+            "type": "object",
+            "description": "腿",
+            "additionalProperties": true
+          }
+        },
+        "totalFees": {
+          "type": "number",
+          "description": "总费用美元"
+        },
+        "valuation": {
+          "type": "object",
+          "description": "估值model/spot/timeYears/rate/dividendYield/steps，腿需volatility",
+          "additionalProperties": true
+        },
+        "maxSpot": {
+          "type": "number",
+          "description": "曲线标的价格上界"
+        }
+      },
+      "required": [
+        "underlying",
+        "currency",
+        "legs",
+        "totalFees"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "underlying": "TEST",
+      "currency": "USD",
+      "legs": [
+        {
+          "assetClass": "OPTION",
+          "side": "BUY",
+          "quantity": 1,
+          "entryPrice": 6,
+          "right": "CALL",
+          "strike": 100,
+          "expiration": "2027-01-15",
+          "multiplier": 100,
+          "standardDeliverableVerified": true,
+          "volatility": 0.25
+        },
+        {
+          "assetClass": "OPTION",
+          "side": "SELL",
+          "quantity": 1,
+          "entryPrice": 2,
+          "right": "CALL",
+          "strike": 110,
+          "expiration": "2027-01-15",
+          "multiplier": 100,
+          "standardDeliverableVerified": true,
+          "volatility": 0.25
+        }
+      ],
+      "totalFees": 2,
+      "valuation": {
+        "model": "BLACK_SCHOLES",
+        "spot": 100,
+        "timeYears": 0.25,
+        "rate": 0.04,
+        "dividendYield": 0
+      }
+    }
+  },
+  {
+    "operation": "plan.draft",
+    "title": "创建或补充投资计划",
+    "english": "Collect an investment plan",
+    "description": "创建或补充投资计划",
+    "group": "portfolios",
+    "kind": "write",
+    "scope": "portfolio",
+    "requiredScopes": [
+      "portfolio"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本"
+        },
+        "fields": {
+          "type": "object",
+          "description": "name/objective/riskTolerance/horizonMonths/budget/maxPositionWeight/weights/excludedSymbols/note；只填用户提供的条件，配置权重是待确认提案",
+          "additionalProperties": true
+        },
+        "clear": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "清空字段"
+          }
+        },
+        "sourceText": {
+          "type": "string",
+          "description": "需求原文"
+        }
+      },
+      "required": [
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "fields": {
+        "name": "研究计划",
+        "objective": "长期分散投资"
+      },
+      "sourceText": "先讨论目标，尚未确认风险、预算和权重"
+    }
+  },
+  {
+    "operation": "plan.list",
+    "title": "投资计划列表",
+    "english": "Investment plans",
+    "description": "投资计划列表",
+    "group": "portfolios",
+    "kind": "read",
+    "scope": "portfolio",
+    "requiredScopes": [
+      "portfolio"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "number",
+          "description": "数量"
+        },
+        "offset": {
+          "type": "number",
+          "description": "偏移"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "plan.get",
+    "title": "查看投资计划与待补问题",
+    "english": "Investment plan and missing questions",
+    "description": "查看投资计划与待补问题",
+    "group": "portfolios",
+    "kind": "read",
+    "scope": "portfolio",
+    "requiredScopes": [
+      "portfolio"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "plan.accept",
+    "title": "人工确认研究组合",
+    "english": "Accept a research portfolio",
+    "description": "人工确认研究组合",
+    "group": "portfolios",
+    "kind": "human",
+    "scope": "portfolio",
+    "requiredScopes": [
+      "portfolio"
+    ],
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本"
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "holdings.analyze",
+    "title": "持仓集中度与分币种资产",
+    "english": "Holdings concentration by currency",
+    "description": "持仓集中度与分币种资产",
+    "group": "portfolios",
+    "kind": "read",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "portfolio"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "type": "string",
+          "description": "已保存的券商快照ID"
+        }
+      },
+      "required": [
+        "snapshotId"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "holdings.brief",
+    "title": "持仓个性化研究简报",
+    "english": "Personalized holdings briefing",
+    "description": "持仓个性化研究简报",
+    "group": "research",
+    "kind": "read",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "portfolio",
+      "market"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "type": "string",
+          "description": "已保存的券商快照ID"
+        }
+      },
+      "required": [
+        "snapshotId"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "holdings.reports",
+    "title": "已保存持仓简报",
+    "english": "Saved holdings briefings",
+    "description": "已保存持仓简报",
+    "group": "alerts",
+    "kind": "read",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "portfolio",
+      "market"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "holdings.report",
+    "title": "读取持仓简报",
+    "english": "Read holdings briefing",
+    "description": "读取持仓简报",
+    "group": "alerts",
+    "kind": "read",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "portfolio",
+      "market"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "research.opportunities",
+    "title": "市场机会与研究入口",
+    "english": "Market opportunities and research prompts",
+    "description": "市场机会与研究入口",
+    "group": "research",
+    "kind": "read",
+    "scope": "market",
+    "requiredScopes": [
+      "market"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "榜单",
+          "enum": [
+            "active",
+            "gainers",
+            "losers"
+          ]
+        },
+        "limit": {
+          "type": "number",
+          "description": "数量"
+        }
+      },
+      "required": [
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "category": "active",
+      "limit": 10
+    }
+  },
+  {
+    "operation": "predict.board",
+    "title": "预测市场成交量、低价与涨跌榜",
+    "english": "Prediction market boards",
+    "description": "预测市场成交量、低价与涨跌榜",
+    "group": "predict",
+    "kind": "read",
+    "scope": "predict",
+    "requiredScopes": [
+      "predict"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "description": "平台",
+          "enum": [
+            "polymarket",
+            "kalshi"
+          ]
+        },
+        "ranking": {
+          "type": "string",
+          "description": "排序",
+          "enum": [
+            "volume",
+            "lowPrice",
+            "movers"
+          ]
+        },
+        "limit": {
+          "type": "number",
+          "description": "单页样本数量"
+        }
+      },
+      "required": [
+        "platform",
+        "ranking"
+      ],
+      "additionalProperties": false
+    },
+    "example": {
+      "platform": "polymarket",
+      "ranking": "volume",
+      "limit": 20
+    }
+  },
+  {
+    "operation": "predict.orderbook",
+    "title": "预测市场公开实时价阶",
+    "english": "Public prediction order book",
+    "description": "预测市场公开实时价阶",
+    "group": "predict",
+    "kind": "read",
+    "scope": "predict",
+    "requiredScopes": [
+      "predict"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "description": "平台",
+          "enum": [
+            "polymarket",
+            "kalshi"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "description": "市场ID"
+        },
+        "outcomeIndex": {
+          "type": "number",
+          "description": "结果下标，从0开始"
+        },
+        "depth": {
+          "type": "number",
+          "description": "Kalshi盘口深度1到100"
+        }
+      },
+      "required": [
+        "platform",
+        "id",
+        "outcomeIndex"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "jobs.configure",
+    "title": "设置持仓简报或条件监控任务",
+    "english": "Configure holdings or condition monitoring",
+    "description": "设置持仓简报或条件监控任务",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "portfolio",
+    "requiredScopes": [
+      "portfolio"
+    ],
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        },
+        "revision": {
+          "type": "number",
+          "description": "当前记录版本"
+        },
+        "kind": {
+          "type": "string",
+          "description": "任务类型",
+          "enum": [
+            "HOLDINGS_BRIEF",
+            "CONDITION"
+          ]
+        },
+        "accountId": {
+          "type": "string",
+          "description": "简报只读账户"
+        },
+        "conditionId": {
+          "type": "string",
+          "description": "已有本地条件规则ID"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "intervalMs": {
+          "type": "number",
+          "description": "轮询间隔，至少配置minIntervalMs"
+        }
+      },
+      "required": [
+        "kind",
+        "enabled",
+        "intervalMs"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "jobs.list",
+    "title": "查看持续监控任务",
+    "english": "Research and condition monitoring jobs",
+    "description": "查看持续监控任务",
+    "group": "alerts",
+    "kind": "read",
+    "scope": "broker",
+    "requiredScopes": [
+      "broker",
+      "portfolio",
+      "market"
+    ],
+    "model": true,
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "example": {}
+  },
+  {
+    "operation": "jobs.run",
+    "title": "立即运行监控任务",
+    "english": "Run a monitoring job now",
+    "description": "立即运行监控任务",
+    "group": "alerts",
+    "kind": "human",
+    "scope": "portfolio",
+    "requiredScopes": [
+      "portfolio"
+    ],
+    "model": false,
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "记录ID"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "example": {}
   }
 ]

@@ -46,7 +46,7 @@ async function mount(t,{model=false,images=false,config:overrides={},gateway}={}
 }
 
 test('standalone navigation, quant calculation and readonly preview operate against the actual service',async t=>{
- const ui=await mount(t);assert.match(ui.app.textContent,/trading agent/);assert.match(ui.app.textContent,/107/);assert.equal(ui.requests.length,0);
+ const ui=await mount(t);assert.match(ui.app.textContent,/trading agent/);assert(ui.app.textContent.includes(String(ui.service.bootstrap().catalog.length)));assert.equal(ui.requests.length,0);
  for(const name of ['◉市场研究','Δ期权与规则','◫组合与回测','◇预测市场','⇄模拟订单','≋成交与持仓对账','◷提醒与简报','▤资料与报告','◌交易对话','▦期权账本','⚙能力与设置'])await ui.click('button',name);
  assert.equal(ui.errors.length,0);assert.equal(ui.requests.some(c=>c.operation?.startsWith('broker.')),false);
  await ui.click('button','Δ期权与规则');const operation=ui.input('选择操作');operation.value='quant.price';await operation.event('change');const controlText=ui.app.querySelector('.workspace-grid').children[0].textContent;assert.doesNotMatch(controlText,/false|null|undefined/);await ui.click('button','运行');assert.match(ui.app.textContent,/2\.49337682/);
@@ -109,4 +109,12 @@ test('broker order card requires review plus an unchecked human checkbox before 
  await ui.click('button','核对并准备提交');assert.equal(submits,0);assert.equal(ui.find('button','确认发送至IBKR模拟账户').disabled,true);
  const check=ui.input('我已核对以上订单及券商警告');assert.equal(check.checked,false);check.checked=true;await check.event('change');await ui.click('button','确认发送至IBKR模拟账户');
  assert.equal(submits,1);assert.match(ui.app.textContent,/已取得券商回执/);assert.match(ui.app.textContent,/Submitted/);assert.equal(ui.errors.length,0);
+});
+
+test('multi-leg payoff renders a chart and investment plan acceptance requires a separate checkbox',async t=>{
+ const ui=await mount(t);await ui.click('button','Δ期权与规则');let select=ui.input('选择操作');select.value='options.strategy';await select.event('change');await ui.click('button','运行');assert.match(ui.app.textContent,/104\.02/);assert(all(ui.app).some(n=>n.tagName==='svg'));
+ await ui.click('button','◫组合与回测');select=ui.input('选择操作');select.value='plan.draft';await select.event('change');
+ await ui.setField('fields',JSON.stringify({name:'Test plan',objective:'Diversification',riskTolerance:'MODERATE',horizonMonths:36,budget:10000,maxPositionWeight:0.6,weights:{A:0.5,B:0.5}}));await ui.click('button','保存');
+ const accept=ui.find('button','确认保存这个研究组合');assert(accept);assert.equal(accept.disabled,true);assert.equal(ui.service.store.list('portfolio').length,0);
+ const checkbox=all(ui.app).find(n=>n.tagName==='input'&&n.attributes.type==='checkbox');checkbox.checked=true;await checkbox.event('change');await accept.click();await ui.settle();assert.equal(ui.service.store.list('portfolio').length,1);assert.equal(ui.service.store.list('tradeIntent').length,0);
 });

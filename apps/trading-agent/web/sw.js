@@ -1,5 +1,5 @@
 // Cache only immutable presentation resources. Account/session/API responses never enter CacheStorage.
-const CACHE = 'trading-agent-shell-v3.4';
+const CACHE = 'trading-agent-shell-v3.5';
 const SHELL = ['/styles.css','/ui-model.js','/icon.svg','/manifest.webmanifest'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL))));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => (key.startsWith('pi-trader-shell-') || key.startsWith('trading-agent-shell-')) && key !== CACHE).map(key => caches.delete(key))))));

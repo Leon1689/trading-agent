@@ -42,11 +42,11 @@ export function operationAvailable(operation, capabilities) {
 }
 export function chartSeries(rows) {
   if (!Array.isArray(rows) || rows.length < 2 || rows.some(r => !r || typeof r !== 'object' || Array.isArray(r))) return null;
-  const timeKey = ['date','period','calendarYear','time','year'].find(k => rows.every(r => r[k] !== undefined && r[k] !== null));
-  const wanted = ['revenue','netIncome','grossProfit','operatingIncome','netProfitMargin','grossProfitMargin','operatingCashFlow','freeCashFlow','equity','portfolioValue','nav','value','balance','adjustedClose','close','price'];
+  const timeKey = ['spot','date','period','calendarYear','time','year'].find(k => rows.every(r => r[k] !== undefined && r[k] !== null));
+  const wanted = ['profit','revenue','netIncome','grossProfit','operatingIncome','netProfitMargin','grossProfitMargin','operatingCashFlow','freeCashFlow','equity','portfolioValue','nav','value','balance','adjustedClose','close','price'];
   const keys = wanted.filter(k => rows.every(r => r[k] !== null && r[k] !== undefined && r[k] !== '' && Number.isFinite(Number(r[k]))));
   if (!keys.length) return null;
-  const ordered = timeKey ? [...rows].sort((a,b) => String(a[timeKey]).localeCompare(String(b[timeKey]))) : rows;
+  const ordered = timeKey ? [...rows].sort((a,b) => timeKey==='spot'?a.spot-b.spot:String(a[timeKey]).localeCompare(String(b[timeKey]))) : rows;
   return {keys,rows:ordered,timeKey};
 }
 export function newsCategory(row) {

@@ -27,3 +27,6 @@ jobs:
       - run: npm test
       - run: node examples/option-pricing.mjs
       - run: node examples/reconciliation.mjs
+
+      - name: Personal assistant offline example
+        run: node examples/personal-assistant.mjs

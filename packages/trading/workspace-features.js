@@ -17,7 +17,7 @@ export class WorkspaceFeatures {
       case 'chat.fork':{
         const row=this.store.require('chat',args.id);requireThat(row.revision===args.revision&&row.status!=='RUNNING'&&!row.deleted,'CHAT_BUSY','会话版本已改变或无法编辑，请刷新。',409);
         requireThat(Number.isInteger(args.messageIndex)&&row.messages[args.messageIndex]?.role==='user'&&typeof args.replacement==='string'&&args.replacement.trim()&&args.replacement.length<=20000,'INVALID_MESSAGE','请选择用户消息并输入替换问题。');
-        const targetId=randomUUID(),prior=row.messages.slice(0,args.messageIndex),historyScopes=[...new Set(prior.flatMap(m=>m.allowedScopes??[]).filter(x=>['broker','ledger','files','portfolio','localRead','localWrite','shell','resources'].includes(x)))];
+        const targetId=randomUUID(),prior=row.messages.slice(0,args.messageIndex),historyScopes=[...new Set(prior.flatMap(m=>m.allowedScopes??[]).filter(x=>['trade','broker','ledger','files','portfolio','localRead','localWrite','shell','resources'].includes(x)))];
         let nativeFork=null;
         const entryId=row.messages[args.messageIndex].nativeUserEntryId;
         if(entryId&&s.runner?.fork)nativeFork=await s.runner.fork({sourceChatId:row.id,targetChatId:targetId,userEntryId:entryId});

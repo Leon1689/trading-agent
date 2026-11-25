@@ -1,8 +1,9 @@
+import { kalshiDepth, polymarketDepth } from './prediction-depth.js';
 /** Bounded read-only market and brokerage transports; credentials never enter result data. */
 const OPERATIONS = Object.freeze([
   'market.quote', 'market.history', 'market.news', 'market.profile', 'market.financials',
   'market.analysts', 'market.screen', 'market.earnings', 'market.options',
-  'broker.accounts', 'broker.snapshot', 'predict.markets', 'predict.detail',
+  'broker.accounts', 'broker.snapshot', 'predict.markets', 'predict.detail', 'predict.orderbook',
 ]);
 const OBJECT = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
@@ -136,7 +137,7 @@ export function createProviders(config = {}, { fetchImpl = fetch, env = process.
   const token = value => string(value, 'cursor', /^[\w+=/.:~-]{1,2000}$/, 2000);
 
   async function get(source, path, params = {}, headers = {}, signal) {
-    const bases = { fmp: 'https://financialmodelingprep.com/stable', alpaca: 'https://data.alpaca.markets/v1beta1', kalshi: 'https://external-api.kalshi.com/trade-api/v2', polymarket: 'https://gamma-api.polymarket.com', ibkr: settings.ibkr?.baseUrl };
+    const bases = { fmp: 'https://financialmodelingprep.com/stable', alpaca: 'https://data.alpaca.markets/v1beta1', kalshi: 'https://external-api.kalshi.com/trade-api/v2', polymarket: 'https://gamma-api.polymarket.com', clob: 'https://clob.polymarket.com', ibkr: settings.ibkr?.baseUrl };
     if (!bases[source]) reject('UNCONFIGURED', 'Provider is not configured', 503);
     const url = new URL(bases[source] + path);
     for (const [name, value] of Object.entries(params)) if (value !== undefined && value !== null) url.searchParams.set(name, String(value));
@@ -335,23 +336,39 @@ export function createProviders(config = {}, { fetchImpl = fetch, env = process.
     const bid = probability(row.yes_bid_dollars); const ask = probability(row.yes_ask_dollars);
     return { id: row.ticker ?? null, eventId: row.event_ticker ?? null, platform: 'kalshi', title: row.title ?? null, status: row.status ?? null,
       outcomes: [{ label: row.yes_sub_title || 'Yes', price: probability(row.last_price_dollars), bid, ask }, { label: row.no_sub_title || 'No', price: null, bid: probability(row.no_bid_dollars), ask: probability(row.no_ask_dollars) }],
+      priceChange24h: null,
       spread: bid !== null && ask !== null ? String(Number((Number(ask) - Number(bid)).toFixed(12))) : null, volume: decimal(row.volume_fp), volume24h: decimal(row.volume_24h_fp),
       asOf: instant(row.updated_time), closesAt: instant(row.close_time), rules: [row.rules_primary, row.rules_secondary].filter(Boolean).join('\n') || null,
       url: row.ticker ? `https://external-api.kalshi.com/trade-api/v2/markets/${encodeURIComponent(row.ticker)}` : null, raw: scrub(row) };
   }
   function normalizePolymarket(row) {
-    let labels = row.outcomes; let prices = row.outcomePrices;
-    try { if (typeof labels === 'string') labels = JSON.parse(labels); if (typeof prices === 'string') prices = JSON.parse(prices); }
+    let labels = row.outcomes; let prices = row.outcomePrices; let tokenIds = row.clobTokenIds;
+    try { if (typeof labels === 'string') labels = JSON.parse(labels); if (typeof prices === 'string') prices = JSON.parse(prices); if(typeof tokenIds === 'string')tokenIds=JSON.parse(tokenIds); }
     catch (error) { reject('UPSTREAM_SCHEMA', 'Prediction outcome arrays are invalid', 502); }
     if (!Array.isArray(labels) || !Array.isArray(prices) || labels.length !== prices.length) reject('UPSTREAM_SCHEMA', 'Prediction outcome prices do not match outcomes', 502);
     return { id: String(row.id ?? ''), platform: 'polymarket', title: row.question ?? null, status: row.closed === true ? 'closed' : row.active === true ? 'active' : 'unknown',
-      outcomes: labels.map((label, index) => ({ label: String(label), price: probability(prices[index]), bid: null, ask: null })),
+      conditionId: row.conditionId ?? null, priceChange24h: decimal(row.oneDayPriceChange),
+      outcomes: labels.map((label, index) => ({ label: String(label), tokenId: Array.isArray(tokenIds)&&tokenIds.length===labels.length&&typeof tokenIds[index]==='string' ? tokenIds[index] : null, price: probability(prices[index]), bid: null, ask: null })),
       spread: decimal(row.spread), volume: decimal(row.volumeNum ?? row.volume), volume24h: decimal(row.volume24hr), asOf: instant(row.updatedAt), closesAt: instant(row.endDate),
       rules: row.description ?? null, url: row.id === undefined ? null : `https://gamma-api.polymarket.com/markets/${encodeURIComponent(row.id)}`, raw: scrub(row) };
   }
   async function predict(operation, args, signal) {
     if (!settings.predict?.enabled) reject('UNCONFIGURED', 'Public prediction-market research is not enabled', 503);
     const platform = enumOf(args.platform, 'platform', ['kalshi', 'polymarket']); const limit = count(args);
+    if(operation==='predict.orderbook') {
+      const index=integer(args.outcomeIndex,'outcomeIndex',0,100);
+      const detail=await predict('predict.detail',{platform,id:args.id},signal), market=detail.data[0];
+      if(!market?.outcomes?.[index])reject('INVALID_INPUT','Outcome index is not in this market');
+      let book;
+      if(platform==='kalshi') {
+        if(index>1)reject('INVALID_INPUT','Kalshi outcome index must be 0 or 1');
+        book=kalshiDepth(await get('kalshi',`/markets/${encodeURIComponent(args.id)}/orderbook`,{depth:integer(args.depth??20,'depth',1,100)},{},signal),index);
+      } else {
+        const tokenId=string(market.outcomes[index].tokenId,'outcome token',/^(?:[0-9]{1,100}|0x[0-9a-fA-F]{1,100})$/,102);
+        book=polymarketDepth(await get('clob','/book',{token_id:tokenId},{},signal),tokenId,market.conditionId);
+      }
+      return envelope(platform,{marketId:args.id,outcome:market.outcomes[index].label,outcomeIndex:index,rules:market.rules,closesAt:market.closesAt,...book},{asOf:book.asOf,missing:book.missing,priceUnit:'USD_per_1_USD_binary_payout',quantityUnit:'CONTRACTS',accessMode:'READ_ONLY',complete:false});
+    }
     let path = '/markets'; let params = {}; let data; let nextCursor = null;
     if (operation === 'predict.detail') {
       const pattern = platform === 'polymarket' ? /^\d{1,30}$/ : /^[A-Z0-9_.-]{1,200}$/;

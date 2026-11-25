@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.5.0 — 2026-11-25
+
+- Added multi-turn investment plans with missing-input questions, concentration/exclusion validation, and separate human research-portfolio acceptance.
+- Added per-currency holdings analysis, personalized briefings, and private scheduled reports.
+- Added same-expiry multi-leg option payoff, exact piecewise break-even analysis, unbounded-tail risk, and aggregate theoretical Greeks.
+- Added canonical-token Polymarket CLOB and fixed-point Kalshi order-book GET adapters, plus page-limited prediction boards and research opportunities.
+- Added leased condition/research jobs, stale-result invalidation, backoff and notifications; no automatic broker submission.
+- Added opt-in browser desktop delivery with generic lock-screen text. Preserved all runtime, ledger, paper execution and reconciliation capabilities.
+- Re-audited BOBBY coverage; corrected obsolete compaction documentation and retained explicit unimplemented items.
+
+
 ## Unreleased
 
 - Rename the application and public repository to trading agent.

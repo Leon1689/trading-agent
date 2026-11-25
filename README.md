@@ -16,9 +16,15 @@
 - **订单跟踪**：逐笔启用后台只读查单，状态变化通知、失败退避和终态停止。
 - **Agent 能力**：保留 `read`、`bash`、`edit`、`write`、资源发现、自动压缩、重试、会话树；TUI、扩展、MCP 和 RPC 使用独立原生入口。
 
-共有 107 项业务操作；60 项可按权限范围提供给模型，47 项仅供用户操作。文件与 Shell 工具另外管理。
+共有 122 项业务操作；72 项可按权限范围提供给模型，50 项仅供用户操作。文件与 Shell 工具另外管理。
 
 使用步骤与配置见[对账与订单跟踪](docs/reconciliation-and-monitoring.md)。无需券商的演示：`node examples/reconciliation.mjs`。
+
+## 个人投资助手增量（3.5）
+
+新增多轮投资计划与人工确认、持仓个性化简报、同到期多腿期权损益和组合 Greeks、公开预测盘口与榜单、持久条件监控及浏览器桌面通知。
+
+[功能与使用说明](docs/personal-assistant.md) · [BOBBY覆盖及剩余缺口](docs/bobby-coverage.md)。离线运行：`node examples/personal-assistant.mjs`。
 
 ## 工程实现
 
